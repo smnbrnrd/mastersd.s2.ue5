@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Conception d'Interface Web</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Client</div>
+                <div class="subtitle">Les objets en JavaScript</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Suite de l'UE "Conception d'Interface Web"</h1>
+                <ol class="mt-3">
+                    <li>Structuration/organisation du contenu (texte, images, vidéos) : HTML</li>
+                    <li>Présentation (visuelle) du contenu : CSS</li>
+                    <li><span class="important">Rendre ce contenu interactif : JavaScript</span></li>
+                </ol>
+                <img src="figures/chap1/html_css_js.png" class="w-65 m-auto mt-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Dans ce chapitre</h1>
+                <ol>
+                    <li>Les objets en JavaScript (ce chapitre)</li>
+                    <ul>
+                        <li>Notion d'objet en JavaScript</li>
+                        <li>Création et manipulation d'objets</li>
+                        <li>Méthodes d'objet et mot-clé <code>this</code></li>
+                        <li>Références et copie d'objets</li>
+                        <li>Conversions d'objets en types primitifs</li>
+                    </ul>
+                    <li>La programmation orientée objet</li>
+                    <li>Objets standards</li>
+                    <li>Angular</li>
+                    <li>AJAX</li>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets en JavaScript</h1>
+                <ul>
+                    <li>En CIW, nous avons vu les types de données en JavaScript:</li>
+                    <ul>
+                        <li>Les types primitifs : <code>Number</code>, <code>String</code>, <code>Boolean</code>, <code>Null</code>, <code>Undefined</code></li>
+                        <li>Les types complexes : <code>Object</code> et <code>Function</code></li>
+                    </ul>
+                    <li>Les types dits "primitifs" ne contiennent qu'une valeur (nombre, chaîne de caractères, booléen, etc.)</li>
+                    <li>Les types complexes contiennent des collections de valeurs et des entités plus complexes</li>
+                    <li>Parmi les types complexes, <span class="important">les objets sont centraux en JavaScript</span></li>
+                    <li>Initialement, pas "objet" au sens "programmation orientée objet"</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets en JavaScript</h1>
+                <ul>
+                    <li>Un objet est une collection de paires clé-valeur</li>
+                    <li>Chaque clé est une chaîne de caractères (sans les <code>""</code>)</li>
+                    <li>Chaque valeur peut être de n'importe quel type (primitif ou complexe)</li>
+                    <li>Exemple :</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name : "John",
+    age : 30,
+    like : [
+        "football",
+        "hamburger",
+        "soda"
+    ]
+};
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Création d'objets</h1>
+                <ul>
+                    <li>Deux syntaxes pour créer un objet (vide) :</li>
+                    <li>Syntaxe "littéral objet" : </li>
+                    <pre><code class="language-javascript" data-trim>
+let obj1 = {};
+                    </code></pre>
+                    <li>Syntaxe "constructeur d'objet" :</li>
+                    <pre><code class="language-javascript" data-trim>
+let obj2 = new Object();
+                    </code></pre>
+                    <li>La première syntaxe est la plus couramment utilisée</li>
+                    <li>Détails sur la deuxième syntaxe plus tard</li>
+                    <li>Note: un objet vide est différent de <code>null</code> (absence volontaire de valeur) ou <code>undefined</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Création d'objets</h1>
+                <ul>
+                    <li>La syntaxe littérale permet la création d'objets "non vide"</li>
+                    <li>Les éléments contenus dans un objet sont ses propriétés</li>
+                    <li>Leurs clés sont des chaînes de caractères, i.e. de type <code>String</code></li>
+                    <li>Les <code>""</code> sont optionnels si le nom ne contient pas de caractères spéciaux (hormis <code>$</code> et <code>_</code>)</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name : "John",
+    age : 30,
+    "favorite-things" : [
+        "football",
+        "hamburger",
+        "soda"
+    ]
+};
+                    </code></pre>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux propriétés</h1>
+                <ul>
+                    <li>Deux syntaxes pour accéder aux propriétés d’un objet :</li>
+                    <li>Syntaxe avec <code>.</code> :</li>
+                    <pre><code class="language-javascript" data-trim>
+if (john.age > 18) {
+    ...
+}
+                    </code></pre>
+                    <li>Syntaxe avec <code>[]</code> :</li>
+                    <pre><code class="language-javascript" data-trim>
+if (john["age"] > 18) {
+    ...
+}
+                    </code></pre>
+                    <li>Deuxième syntaxe obligatoire si le nom de propriété ne respecte pas les règles de nommage des variables</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux propriétés</h1>
+                <ul>
+                    <li>La syntaxe avec <code>[]</code> autorise plus de choses que la syntaxe avec <code>.</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let obj = {
+    "Ugly property name (that works)" : "Say",
+    15 : "hello",
+    1.5 : "world",
+    let : "!" // possible avec les noms de propriétés mais à proscrire
+};
+console.log(obj["Ugly property names (that work)"]);
+console.log(obj[15]); // equivalent à obj["15"]
+console.log(obj["1.5"]);
+console.log(obj["let"]);
+
+let name = prompt("Entrez le nom de la propriété");
+let obj = {
+    [name]: "hello",
+};
+console.log(obj[name]); // non autorisé avec la syntaxe obj.name
+                    </code></pre>
+                    <li>Pour éviter les erreurs, privilégier la syntaxe <code>.</code> autant que possible</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux propriétés</h1>
+                <ul>
+                    <li>Un fois l’objet créé, ses propriétés se manipulent comme des variables</li>
+                    <pre><code class="language-javascript" data-trim>
+john.age = 41;
+john.age++;
+                    </code></pre>
+                    <li>On peut aussi ajouter de nouvelles propriétés après la création :</li>
+                    <pre><code class="language-javascript" data-trim>
+john.height = 1.75; // ajout avec la syntaxe .
+john["weight"] = 70; // ajout avec la syntaxe []
+                    </code></pre>
+                    <li>On peut supprimer une propriété avec l’opérateur <code>delete</code> :</li>
+                    <pre><code class="language-javascript" data-trim>
+delete john.age; // suppression avec la syntaxe .
+delete john["weight"]; // suppression avec la syntaxe []
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes d'objet</h1>
+                <ul>
+                    <li>Rappel: les fonctions sont des objets particuliers, et peuvent être affectées à des variables</li>
+                    <pre><code class="language-javascript" data-trim>
+let sayHello = function() {
+    console.log("Hello");
+};
+sayHello(); // affiche "Hello"
+                    </code></pre>
+                    <li>Elles peuvent donc être utilisées en tant que propriété d'objet</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30
+};
+
+john.sayHello = function() {
+    console.log("Hello");
+};
+                    </code></pre>
+                    <li><code>sayHello</code> est ajouté en tant que propriété de l'objet <code>john</code></li>
+                    <li class="important">Une fonction affectée à une propriété d'objet est appelée une méthode de l'objet</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes d'objet</h1>
+                <ul>
+                    <li>Possible de le faire directement à la création de l'objet</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    sayHello: function() {
+        console.log("Hello");
+    }
+};
+john.sayHello(); // affiche "Hello"
+                    </code></pre>
+                    <li>Depuis ES6, une syntaxe plus courte est possible pour définir une méthode :</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    sayHello() {
+        console.log("Hello");
+    }
+};
+john.sayHello(); // affiche "Hello"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes d'objet</h1>
+                <h2>Le mot-clé <code>this</code></h2>
+                <ul>
+                    <li>Il est souvent nécessaire d'accéder aux propriétés d'un objet dans une de ses méthodes</li>
+                    <li>Dans une méthode, le mot-clé <code>this</code> fait référence à l'objet courant</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    sayHello() {
+        // "this" désigne l'objet courant (john)
+        console.log("Hello, my name is " + this.name);
+    }
+};
+john.sayHello(); // affiche "Hello, my name is John"
+                    </code></pre>
+                    <li>Ici, <code>this</code> fait référence à l'objet <code>john</code>, utilisé pour appeler la méthode <code>sayHello</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes d'objet</h1>
+                <h2>Le mot-clé <code>this</code></h2>
+                <ul>
+                    <li><code>this</code> peut être utilisé dans toutes les fonctions, même s'il ne s'agit pas d'une méthode d'objet</li>
+                    <li>La valeur de <code>this</code> est évaluée à l'exécution, en fonction du contexte</li>
+                    <pre><code class="language-javascript" data-trim>
+let user1 = { name: "John" };
+let user2 = { name: "Jane" };
+function sayHi() {
+    alert( this.name );
+}
+
+user1.foo = sayHi;
+user2.foo = sayHi;
+user1.foo(); // John (this == user1)
+user2.foo(); // Jane (this == user2)
+                    </code></pre>
+                    <li>Si appel à la fonction sans objet, <code>this</code> est <code>undefined</code> (mode strict)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Références</h1>
+                <ul>
+                    <li>Rappel: les objets sont manipulés par référence</li>
+                    <pre><code class="language-javascript" data-trim>
+let a = { x:3.0, y:5.0 };
+let b = { x:2.0, y:0.0 };
+let c = b;
+let d = null;
+                    </code></pre>
+                </ul>
+                <figure>
+                    <img src="figures/chap1/js_objet.png" class="w-45 mt-4">
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Références</h1>
+                <ul>
+                    <li>Les objets peuvent être déclarés avec <code>const</code></li>
+                    <pre><code class="language-javascript" data-trim>
+const john = {
+    name : "John",
+    age : 30
+};
+                    </code></pre>
+                    <li>Dans ce cas, on ne peut pas réaffecter un autre objet à la même variable</li>
+                    <pre><code class="language-javascript" data-trim>
+john = {
+    name : "Bob",
+    age : 25
+}; // Erreur !
+                    </code></pre>
+                    <li>Mais on peut toujours modifier les propriétés de l’objet référencé</li>
+                    <pre><code class="language-javascript" data-trim>
+john.age = 31; // OK
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Références</h1>
+                <ul>
+                    <li>Les objets peuvent être transmis en argument à une fonction</li>
+                    <li>Dans ce cas, le paramètre n’est pas une copie de l’objet mais une copie de la référence</li>
+                    <pre><code class="language-javascript" data-trim>
+function birthday(dude){
+    dude.age++;
+}
+
+console.log(john.age); // affiche "30"
+birthday(john);
+console.log(john.age); // affiche "31"
+
+birthday( {name: "john", age: 41} );
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Références</h1>
+                <ul>
+                    <li>Quand on compare deux objets, on compare leur référence</li>
+                    <pre><code class="language-javascript" data-trim>
+let a = {};
+let b = a; // copie la référence
+console.log( a == b ); // true, les deux variables référencent le même objet
+console.log( a === b ); // true
+                    </code></pre>
+                    <li>Mais deux objets indépendants ne sont jamais égaux quels que soient leurs contenus</li>
+                    <pre><code class="language-javascript" data-trim>
+let a = {};
+let b = {}; // 2 objets indépendants
+alert( a == b ); // false
+alert( a === b ); // false
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Copie d'objets</h1>
+                <ul>
+                    <li>Affecter un objet à un autre ne copie que la référence. Comment dupliquer un objet ?</li>
+                    <li>Créer un nouvel objet et copier toutes les propriétés</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30
+};
+let clone = {}; // le nouvel objet vide
+
+// On copie les propriétés une à une dans clone
+for (let key in john) {
+    clone[key] = john[key];
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Copie d'objets</h1>
+                <ul>
+                    <li>Affecter un objet à un autre ne copie que la référence. Comment dupliquer un objet ?</li>
+                    <li>Utiliser la fonction <code>Object.assign</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30
+};
+let clone = {}; // le nouvel objet vide
+Object.assign(clone, john);
+// ou directement let clone = Object.assign({}, john);
+
+console.log(clone.name); // affiche "John"
+console.log(clone.age); // affiche "30"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Copie d'objets</h1>
+                <ul>
+                    <li><code>Object.assign</code> permet de copier les propriétés d'un objet dans un autre</li>
+                    <pre><code class="language-javascript" data-trim>
+let user = {
+    name: "John",
+    age: 30
+};
+let permissions1 = { canView: true };
+let permissions2 = { canEdit: true };
+
+// copie toutes les propriétés de permissions1 et 2 dans user
+Object.assign(user, permissions1, permissions2);
+
+// ici, user = { name: "John", age: 30, canView: true, canEdit: true }
+alert(user.name); // John
+alert(user.canView); // true
+alert(user.canEdit); // true
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Copie d'objets</h1>
+                <h2>Copie profonde</h2>
+                <ul>
+                    <li>Comme en Java, une difficulté survient quand une propriété est un objet</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    sizes: {
+        height: 182,
+        width: 50
+    }
+};
+
+let clone = Object.assign({}, john);
+console.log( john.sizes === clone.sizes ); // true, c'est le même objet
+                    </code></pre>
+                    <li>Ici, la propriété <code>sizes</code> n’est pas dupliquée, c’est sa référence qui l’est</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Copie d'objets</h1>
+                <h2>Copie profonde</h2>
+                <ul>
+                    <li>Fonction <code>structuredClone</code> : clone les objets en cascade</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    sizes: {
+        height: 182,
+        width: 50
+    }
+};
+
+let clone = structuredClone(john);
+
+alert( john.sizes === clone.sizes ); // false, ce sont deux objets différents
+                    </code></pre>
+                    <li>Ne fonctionne pas dans toutes les situations, mais dans ce cas, il faut surtout se demander si ce qu'on fait à du sens</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <ul>
+                    <li>Si on accède à une propriété inexistante, la valeur est <code>undefined</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name : "John",
+    age : 30,
+};
+console.log(john.address); // affiche "undefined"
+                    </code></pre>
+                    <li>Opérateur <code>in</code>: permet de tester l’existence d’un propriété ou d’énumérer toutes les propriétés avec <code>for</code></li>
+                    <pre><code class="language-javascript" data-trim>
+console.log("age" in john); // affiche "true"
+console.log("address" in john); // affiche "false"
+for (let key in john) {
+    console.log(key);
+}
+                    </code></pre>
+                    <li>Note: l'ordre des propriétés est préservé sauf pour les propriétés dont le nom est un entier, qui apparaissent en premier</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <ul>
+                    <li>Les propriétés <code>undefined</code> peuvent générer des erreurs difficiles à contourner avec <code>in</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name : "John",
+    address : {
+        num : 42,
+        street : "life street"
+    }
+};
+delete john.address;
+console.log(john.address.street); // erreur
+                    </code></pre>
+                    <li>Une solution : opérateur de coalescence des nuls</li>
+                    <pre><code class="language-javascript" data-trim>
+console.log(john.address ? john.address.street : undefined); // affiche "undefined"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <ul>
+                    <li>La solution précédente est peu élégante et peut vite devenir illisible</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {};
+console.log(john.address ? john.address.street ? john.address.street.name : undefined : undefined);
+                    </code></pre>
+                    <li>Une autre solution : opérateur <code>&&</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {};
+console.log(john.address && john.address.street && john.address.street.name); 
+// affiche "undefined" (pas d'erreur)
+                    </code></pre>
+                    <li>Les opérateurs <code>&&</code> et <code>||</code> retournent la dernière valeur évaluée (sans conversion)</li>
+                    <li>Ici: soit la valeur <code>john.address.street.name</code> si toutes les propriétés existent, soit <code>undefined</code></li>
+                    <li>Plus lisible mais loin d’être optimal</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <h2>Chaînage optionnel</h2>
+                <ul>
+                    <li>Une solution récente : le chaînage optionnel avec <code>?.</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {};
+console.log(john?.address?.street?.name);
+                    </code></pre>
+                    <li>fonctionnement "court-circuit": arrête l’évaluation si la valeur avant <code>?.</code> est non-définie et renvoie <code>undefined</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let john = null;
+console.log( john?.address ); // undefined
+console.log( john?.address.street ); // undefined
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <h2>Chaînage optionnel</h2>
+                <ul>
+                    <li><code>?.</code> n’est pas un opérateur mais un raccourci syntaxique</li>
+                    <li>Il peut s’utiliser sur tous les types d’accès</li>
+                    <pre><code class="language-javascript" data-trim>
+let key = "firstName";
+let user1 = {
+    firstName: "John"
+};
+let user2 = null;
+console.log( user1?.[key] ); // John
+console.log( user2?.[key] ); // undefined
+delete user?.name; // supprime user.name si user existe
+                    </code></pre>
+                    <li>En revanche, non autorisé pour l’accès en écriture</li>
+                    <pre><code class="language-javascript" data-trim>
+user?.name = "Pete"; // Erreur
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès illégaux</h1>
+                <h2>Remarques</h2>
+                <ul>
+                    <li>Cette construction syntaxique est pratique mais dangereuse</li>
+                    <li>Si on l'utilise trop systématiquement, cela va masquer les erreurs de programmation</li>
+                    <li>Il ne devrait être utilisé que pour les propriétés optionnelles dans notre logique de code</li>
+                    <li>De façon générale, la programmation défensive est préférable</li>
+                    <li>De plus, cela ne fonctionne pas avec les variables non déclarées</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <h2>Conversion de type primitifs</h2>
+                <ul>
+                    <li>Nous avons vus que JS peut effectuer des conversions automatiques entre types primitifs</li>
+                    <li>Exemple: la fonction <code>console.log()</code> convertit ses arguments en chaînes de caractères</li>
+                    <pre><code class="language-javascript" data-trim>
+let value = true;
+console.log(value); // affiche "true"
+                    </code></pre>
+                    <li>Exemple: les opérateurs arithmétiques convertissent les opérandes en nombres</li>
+                    <pre><code class="language-javascript" data-trim>
+let value = "5";
+console.log(value * 2); // affiche "10"
+                    </code></pre>
+                    <li>Exemple: les opérateurs logiques convertissent les opérandes en booléen</li>
+                    <pre><code class="language-javascript" data-trim>
+let value = "Hello";
+console.log( !value ); // affiche "false"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <h2>Cas particulier de l'opérateur <code>+</code></h2>
+                <ul>
+                    <li>L'opérateur <code>+</code> peut faire soit une addition, soit une concaténation</li>
+                    <li>Si au moins un des opérandes est une chaîne de caractères, l'autre est converti en chaîne et les deux sont concaténés</li>
+                    <pre><code class="language-javascript" data-trim>
+console.log( 1 + "2" ); // affiche "12"
+console.log( "Hello, " + 5 ); // affiche "Hello, 5"
+                    </code></pre>
+                    <li>Sinon, les deux opérandes sont convertis en nombres et additionnés</li>
+                    <pre><code class="language-javascript" data-trim>
+console.log( 1 + 2 ); // affiche "3"
+console.log( true + 2 ); // affiche "3"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <ul>
+                    <li>Que se passe-t-il si on fait des opérations sur les objets (e.g. <code>john</code> + <code>bob</code>)?</li>
+                    <li>Ou si on essaie d'afficher un objet (e.g. <code>console.log(john)</code>)?</li>
+                    <li class="important">JS essaye de convertir les objets en types primitifs</li>
+                    <li>Ces conversions ne sont pas implicites, mais on peut les définir explicitement</li>
+                    <li>Seulement deux conversions possibles: en <code>String</code> ou en <code>Number</code></li>
+                    <li>Pas de conversion en <code>Boolean</code>: tous les objets sont <code>true</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <h2>Conversion en <code>String</code></h2>
+                <ul>
+                    <li>Par défaut, la conversion en <code>String</code> utilise la méthode <code>toString()</code>, prédéfinie</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30
+};
+console.log(john.toString()); // affiche [object Object]
+                    </code></pre>
+                    <li>On peut redéfinir cette méthode pour personnaliser la conversion</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    toString() {
+        return `{name: "${this.name}", age: ${this.age}}`;
+    }
+};
+console.log(john.toString()); // affiche {name: "John", age: 30}
+                    </code></pre>
+                    <li>Note: l'appel à <code>toString</code> n'est pas implicite comme en Java</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <h2>Conversion en <code>Number</code></h2>
+                <ul>
+                    <li>Par défaut, la conversion en <code>Number</code> utilise la méthode <code>valueOf()</code></li>
+                    <li>Cette méthode est prédéfinie mais retourne l'objet lui-même, donc inutile pour la conversion (?)</li>
+                    <li>On peut redéfinir cette méthode pour personnaliser la conversion</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    valueOf() {
+        return this.age;
+    }
+};
+console.log(john + 10); // affiche 40
+                    </code></pre>
+                    <li>Si <code>valueOf</code> retourne un objet, elle est ignorée et la conversion utilise <code>toString()</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let bob = {
+    name: "Bob",
+    age: 45
+};
+console.log(bob + 10); // affiche "[object Object]10"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Conversion d'objets</h1>
+                <h2>Conversion en <code>Number</code> ou <code>String</code></h2>
+                <ul>
+                    <li>On peut aussi redéfinir la méthode <code>[Symbol.toPrimitive]</code> pour gérer les deux conversions</li>
+                    <pre><code class="language-javascript" data-trim>
+let john = {
+    name: "John",
+    age: 30,
+    [Symbol.toPrimitive](hint) {
+        if (hint === "string") {
+            return `{name: "${this.name}", age: ${this.age}}`;
+        } else {
+            return this.age;
+        }
+    }
+};
+console.log(String(john)); // affiche {name: "John", age: 30}
+console.log(john + 10); // affiche 40
+                    </code></pre>
+                    <li>Nous n'expliquerons pas ici la syntaxe <code>[Symbol.toPrimitive]</code> (cf. <a href="https://javascript.info/symbol" target="_blank">documentation</a>)</li>
+                    <li><code>hint</code> indique le type de conversion demandée ("string", "number" ou "default")</li>
+                    <li>Cette méthode est prioritaire sur <code>toString()</code> et <code>valueOf()</code></li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
