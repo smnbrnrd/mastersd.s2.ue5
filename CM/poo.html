@@ -29,19 +29,794 @@
             <!--------------------------------------------->
             <section>
                 <h1>Dans ce chapitre</h1>
-
                 <ol>
-                    <li>Les objets en JavaScript (ce chapitre)</li>
-                    <li>La programmation orientée objet</li>
+                    <li>Les objets en JavaScript</li>
+                    <li>La programmation orientée objet en JS</li>
                     <ul>
-                        <li>Constructeur</li>
-                        <li>Prototype et héritage prototypal</li>
-                        <li>Classes et encapsulation</li>
+                        <li>Notion de prototype</li>
+                        <li>Héritage prototypal</li>
+                        <li>Introduction aux classes (depuis ES6)</li>
+                        <li>Encapsulation</li>
                     </ul>
                     <li>Objets standards</li>
                     <li>Angular</li>
                     <li>AJAX</li>
                 </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Notion de prototype</h1>
+                <ul>
+                    <li>En JS, les objets ont tous une propriété cachée <code>[[Prototype]]</code></li>
+                    <li>C'est une référence égale à <code>null</code> ou qui désigne un autre objet</li>
+                    <li>Cet autre objet est <span class="important">son prototype</span></li>
+                </ul>
+                <figure>
+                    <img src="figures/chap2/prototype1.png" class="w-40 m-auto mt-5">
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Notion de prototype</h1>
+                <ul>
+                    <li><code>[[Prototype]]</code> est caché mais accessible de différentes façons</li>
+                    <li>Une première façon est d'utiliser la propriété <code>__proto__</code></li>
+                    <li><code>__proto__</code> est un accesseur de <code>[[Prototype]]</code></li>
+                    <li>Tous les objets JS sont dotés de cette propriété (même les objets litéraux)</li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-60">
+                        <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true
+};
+let rabbit = {
+    jumps: true
+};
+rabbit.__proto__ = animal; 
+// => rabbit.[[Prototype]] pointe sur animal
+                        </code></pre>
+                    </div>
+                    <div class="col-40">
+                        <figure>
+                            <img src="figures/chap2/prototype2.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Héritage prototypal</h1>
+                <ul>
+                    <li>L'intérêt premier des prototypes est <span class="important">l'héritage prototypal</span></li>
+                    <li>Si une propriété est introuvable dans un objet, JS va la chercher dans son prototype</li>
+                    <li>La propriété <code>eats</code> est rendu accessible à <code>rabbit</code> via son prototype <code>animal</code></li>
+                    <li>On dit que <code>rabbit</code> hérite de la propriété <code>eats</code> de <code>animal</code></li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-60">
+                        <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true
+};
+let rabbit = {
+    jumps: true,
+    __proto__: animal
+};
+console.log(rabbit.jumps); // true
+console.log(rabbit.eats); // true (hérité de animal)
+                        </code></pre>
+                    </div>
+                    <div class="col-40">
+                        <figure>
+                            <img src="figures/chap2/prototype2.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Héritage prototypal</h1>
+                <ul>
+                    <li>Héritage pour la lecture mais pas pour l'écriture</li>
+                    <li>À l'écriture, si la propriété est inexistante dans l'objet, elle est créée dans l'objet lui-même</li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-60">
+                        <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true,
+    walk() {
+        console.log("walk walk");
+    }
+};
+let rabbit = {
+    jumps: true,
+    __proto__: animal
+};
+
+rabbit.eats = false;
+rabbit.walk = function() {
+    console.log("jump jump");
+};
+rabbit.walk(); // "jump jump"
+                        </code></pre>
+                    </div>
+                    <div class="col-40">
+                        <figure>
+                            <img src="figures/chap2/prototype3.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Chaîne de prototypes</h1>
+                <ul>
+                    <li>Par défaut, le prototype d'un objet est un objet appelé <code>Object.prototype</code></li>
+                    <li>Le prototype de <code>Object.prototype</code> est <code>null</code></li>
+                    <li><code>Object.prototype</code> contient plusieurs fonctions prédéfinies accessibles à tous les objets</li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-60">
+                        <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true,
+    walk() {
+        console.log("walk walk");
+    }
+};
+console.log(animal.toString()); // [object Object]
+                        </code></pre>
+                    </div>
+                    <div class="col-40">
+                        <figure>
+                            <img src="figures/chap2/prototype4.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Chaîne de prototypes</h1>
+                <ul>
+                    <li>Plusieurs niveaux d'héritage prototypal forment une <span class="important">chaîne de prototypes</span></li>
+                    <li>Les propriétés sont héritées tout au long de la chaîne</li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-60">
+                        <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true,
+    walk() {
+        console.log("walk walk");
+    }
+};
+let rabbit = {
+    jumps: true,
+    __proto__: animal
+};
+let longEar = {
+    earLength: 10,
+    __proto__: rabbit
+};
+
+longEar.walk(); // walk walk (hérité de animal)
+console.log(longEar.jumps); // true (hérité de rabbit)
+                        </code></pre>
+                    </div>
+                    <div class="col-40">
+                        <figure>
+                            <img src="figures/chap2/prototype5.png" class="w-80 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Chaîne de prototypes</h1>
+                <ul>
+                    <li>Une chaîne de prototypes peut créer des conflits de noms de propriétés</li>
+                    <li><code>this</code> permet de sélectionner la propriété de l'objet appelant</li>
+                </ul>
+                <div class="row mt-5">
+                    <div class="col-55">
+                        <pre><code class="language-javascript" data-trim>
+let a = {
+    x: 10,
+    calculate(z) {
+        return this.x + this.y + z;
+    }
+};
+let b = {
+    y: 20,
+    __proto__: a
+};
+let c = {
+    y: 30,
+    __proto__: a
+};
+console.log(b.calculate(30)); // 10 + 20 + 30 = 60
+console.log(c.calculate(40)); // 10 + 30 + 40 = 80
+                        </code></pre>
+                    </div>
+                    <div class="col-45">
+                        <figure>
+                            <img src="figures/chap2/prototype6.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Chaîne de prototypes</h1>
+                <ul class="mb-3">
+                    <li>La boucle <code>for...in</code> énumère les propriétés, y compris celles héritées</li>
+                    <li>La fonction <code>hasOwnProperty</code> permet de filtrer les propriétés héritées</li>
+                </ul>
+                <pre><code class="language-javascript" data-trim>
+let animal = {
+    eats: true
+};
+let rabbit = {
+    jumps: true,
+    __proto__: animal
+};
+
+for(let prop in rabbit) console.log(prop); // jumps, puis eats
+
+for(let prop in rabbit) {
+    if (rabbit.hasOwnProperty(prop)) {
+        console.log(prop); // jumps
+    } else {
+        console.log(prop); // eats
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <ul>
+                    <li>Plusieurs façons de définir/affecter un prototype à un objet</li>
+                    <li><code>__proto__</code> est progressivement abandonné par les navigateurs (raisons techniques)</li>
+                    <li>Aujourd'hui, il n'est toléré que dans une définition littérale</li>
+                    <li>À la place, il faut utiliser les méthodes statiques dédiées</li>
+                    <pre><code class="language-javascript" data-trim>
+Object.setPrototypeOf(rabbit, animal); // définit le prototype de rabbit
+console.log(Object.getPrototypeOf(rabbit) === animal); // true
+                    </code></pre>
+                    <li><code>Object.create()</code> crée un nouvel objet et permet de spécifier son prototype</li>
+                    <pre><code class="language-javascript" data-trim>
+let rabbit = Object.create(animal, {
+    jumps: { value: true }
+});
+                    </code></pre>
+                    ou
+                    <pre><code class="language-javascript" data-trim>
+let rabbit = Object.create(animal);
+rabbit.jumps = true;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <ul class="mb-3">
+                    <li>On peut également utiliser les constructeurs pour définir le prototype des objets créés</li>
+                    <li>En JS, les fonctions sont des types d'objets et ont une propriété <code>prototype</code></li>
+                    <li class="important">Il ne s'agit pas du <code>[[Prototype]]</code> de la fonction mais d'une propriété interne appelée <code>prototype</code></li>
+                    <li>Quand on utilise <code>new</code>, l'objet créé a pour prototype la propriété <code>prototype</code> de cette fonction</li>
+                </ul>
+                <div class="row">
+                    <div class="col-50">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+// création d'un objet vide
+// avec la syntaxe constructeur
+let myObj = new Object();
+                        </code></pre>
+                    </div>
+                    <div class="col-50">
+                        <figure>
+                            <img src="figures/chap2/prototype7.png" class="w-80 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <ul class="mb-3">
+                    <li><code>prototype</code> désigne un objet dont tous les objets créés avec le constructeur héritent</li>
+                    <li>En modifiant cet objet, on modifie le prototype de tous les objets concernés</li>
+                </ul>
+                <div class="row">
+                    <div class="col-50">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+function Person(firstname, lastname) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+}
+
+let john = new Person("John", "Doe");
+
+Person.prototype.sayHi = function() {
+    console.log(`Hi, I'm ${this.firstname} ${this.lastname}`);
+};
+
+john.sayHi(); // Hi, I'm John Doe
+                        </code></pre>
+                    </div>
+                    <div class="col-50">
+                        <figure>
+                            <img src="figures/chap2/prototype8.png" class="w-75 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>Remarques</h2>
+                <ul>
+                    <li>Ne pas confondre la propriété <code>prototype</code> d'une fonction et le <code>[[Prototype]]</code> de la fonction</li>
+                    <li>Comme les fonctions sont des objets, elles ont elles-mêmes un <code>[[Prototype]]</code></li>
+                    <li>Ce prototype est <code>Function.prototype</code> pour toutes les fonctions</li>
+                    <li>Tous les types d'objets standards suivent ce principe</li>
+                    <li>Par exemple, un tableau est un objet dont le prototype est <code>Array.prototype</code></li>
+                    <li>Cela permet de bénéficier de fonctions prédéfinies comme <code>push</code>, <code>pop</code>, etc.</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>Remarques</h2>
+                <figure>
+                    <img src="figures/chap2/nativeprototype.png" class="w-70 m-auto">
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>En résumé...</h2>
+                <ul>
+                    <li><code>__proto__</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let rabbit = {
+    jumps: true,
+    __proto__: animal
+};
+                    </code></pre>
+                    <li>Ne fait plus partie du standard</li>
+                    <li>Ralenti l'execution et provoque des effets de bord indésirables</li>
+                    <li>Encore pris en charge par la plupart des navigateurs, mais pour combien de temps?</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>En résumé...</h2>
+                <ul>
+                    <li><code>Object.setPrototypeOf()</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let rabbit = {
+    jumps: true
+};
+Object.setPrototypeOf(rabbit, animal);
+                    </code></pre>
+                    <li>Standard donc mieux pris en charge</li>
+                    <li>Mais de façon général, changer le prototype après la création est très peu performant</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>En résumé...</h2>
+                <ul>
+                    <li><code>Object.create()</code></li>
+                    <pre><code class="language-javascript" data-trim>
+let rabbit = Object.create(animal, {
+    jumps: { value: true }
+});
+                    </code></pre>
+                    <li>Syntaxe plus complexe mais plus riche (descripteurs de propriétés)</li>
+                    <li>C'est de loin le plus performant pour définir un prototype d'un objet unique</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Définir un prototype</h1>
+                <h2>En résumé...</h2>
+                <ul>
+                    <li>Constructeur</li>
+                    <pre><code class="language-javascript" data-trim>
+function Rabbit(name) {
+    this.name = name;
+}
+Rabbit.prototype = animal;
+let rabbit = new Rabbit("White Rabbit");
+                    </code></pre>
+                    <li>Préférable pour la mise en oeuvre d'une vraie conception OO</li>
+                    <li>Si un seul objet créé, est-ce nécessaire d'utiliser les prototypes?</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>Syntaxe de base:</li>
+                    <pre><code class="language-javascript" data-trim>
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    sayHi() {
+        console.log(`Hi, I'm ${this.name}`);
+    }
+}
+let john = new Person("John");
+john.sayHi(); // Hi, I'm John
+                    </code></pre>
+                    <li class="mt-2">Déclare une class <code>Person</code> avec:</li>
+                    <ul>
+                        <li>Une propriété <code>name</code></li>
+                        <li>Un constructeur pour initialiser <code>name</code></li>
+                        <li>Une méthode <code>sayHi()</code> pour afficher un message</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>Une classe est en fait un raccourci syntaxique pour les constructeurs</li>
+                    <li>La classe <code>Person</code> engendre la création de la fonction <code>Person(name)</code> dont le code est celui du constructeur</li>
+                    <pre><code class="language-javascript" data-trim>
+class Person {
+    constructor(name) { this.name = name; }
+    sayHi() { console.log(`Hi, I'm ${this.name}`); }
+}
+
+// Person est une fonction et plus précisemment un constructeur:
+console.log(typeof Person); // function
+console.log(Person === Person.prototype.constructor); // true
+                    </code></pre>
+                    <li>La méthode <code>sayHi()</code> est ajoutée à <code>Person.prototype</code></li>
+                    <pre><code class="language-javascript" data-trim>
+console.log(Person.prototype.sayHi); // affiche le code de la méthode sayHi
+console.log(Object.getOwnPropertyNames(Person.prototype)); // constructor, sayHi
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>Utilisation identique à celle d'un constructeur</li>
+                    <pre><code class="language-javascript" data-trim>
+const john = new Person("John");
+john.sayHi(); // Hi, I'm John
+                    </code></pre>
+                    <li>Le fonctionnement est le même mais la classe ajoute de la lisibilité</li>
+                    <li>Différence: une classe ne peut pas être appelée sans <code>new</code></li>
+                    <li>Et surtout, les classes introduisent des mécanismes supplémentaires qui facilitent la POO</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>Par exemple pour l'héritage prototypal</li>
+                    <pre><code class="language-javascript" data-trim>
+class Student extends Person {
+    constructor(name, study) {
+        super(name); // appel du constructeur parent
+        this.study = study;
+    }
+    sayHiStudent() {
+        this.sayHi();
+        console.log(`and I study ${this.study}`);
+    }
+}
+                    </code></pre>
+                    <li class="mt-2">Ici, <code>Student</code> hérite de <code>Person</code> et ajoute une propriété <code>study</code> ainsi qu'une méthode <code>sayHiStudent()</code> qui utilise la méthode <code>sayHi()</code> héritée de <code>Person</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>En pratique, le <code>[[Prototype]]</code> de <code>Student.prototype</code> désigne <code>Person.prototype</code></li>
+                    <li>Dés lors, il est naturel de pouvoir redéfinir des méthodes héritées</li>
+                </ul>
+                <div class="row">
+                    <div class="col-55">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+class Person {...}
+
+class Student extends Person {
+    ...
+    sayHiStudent() {
+        this.sayHi(); // appel de la méthode parent
+        console.log(`and I study ${this.study}`);
+    }
+}
+
+let john = new Student("John", "Computer Science");
+john.sayHi(); // Hi, I'm John
+john.sayHiStudent(); // Hi, I'm John and I study Computer Science
+                        </code></pre>
+                    </div>
+                    <div class="col-45">
+                        <figure>
+                            <img src="figures/chap2/classinheritance1.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>En pratique, le <code>[[Prototype]]</code> de <code>Student.prototype</code> désigne <code>Person.prototype</code></li>
+                    <li>Dés lors, il est naturel de pouvoir redéfinir des méthodes héritées</li>
+                </ul>
+                <div class="row">
+                    <div class="col-55">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+class Person {...}
+
+class Student extends Person {
+    ...
+    sayHi() {
+        super.sayHi(); // appel de la méthode parent
+        console.log(`and I study ${this.study}`);
+    }
+}
+
+let john = new Student("John", "Computer Science");
+john.sayHi(); // Hi, I'm John and I study Computer Science
+                        </code></pre>
+                    </div>
+                    <div class="col-45">
+                        <figure>
+                            <img src="figures/chap2/classinheritance2.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <ul>
+                    <li>Une classe peut aussi contenir des déclarations de méthodes statiques</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    static compare(personA, personB) {
+        return personA.name === personB.name;
+    }
+}
+let john1 = new Person("John");
+let john2 = new Person("John");
+console.log(Person.compare(john1, john2)); // true
+                    </code></pre>
+                    <li class="mt-2">Dans une méthode statique, <code>this</code> désigne le constructeur de la classe</li>
+                    <li>Les méthodes statiques sont également héritées (<code>Student.compare(...)</code>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les classes</h1>
+                <h2>Remarques</h2>
+                <p class="strong">Pour éviter les erreurs, il est fortement conseillé de s'imposer certaines règles d'utilisation:</p>
+                <ul>
+                    <li>Déclaration explicite du constructeur</li>
+                    <li>Déclaration des propriétés dans la classe et initialisation dans le constructeur</li>
+                    <li>Toujours invoquer les méthodes dans le contexte de son objet (pas en <em>callback</em>)</li>
+                    <li>Ne pas modifier <em>a posteriori</em> la chaîne de prototypes établie par les classes</li>
+                    <li>S'abstenir d'utiliser les classes pour la création d'objets uniques</li>
+                    <li>Utiliser l'encapsulation...</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <ul>
+                    <li>Encapsulation: un objet fourni une interface publique pour le manipuler mais maintient son état interne de façon caché</li>
+                    <li class="important">État interne = ses propriétés</li>
+                    <li class="important">Interface publique = méthodes publiques pour manipuler les propriétés</li>
+                    <li>Il faut pouvoir limiter l'accès aux propriétés...</li>
+                    <li>... et définir des <em>getters</em> et des <em>setters</em> pour les manipuler</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Champs de classe</h2>
+                <ul>
+                    <li>Dans les classes, les propriétés sont <em>publiques</em> par défaut et déclarées via le constructeur</li>
+                    <li>Il est possible de les déclarer/initialiser dans les classes directement</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+class Person {
+    name = "unknown";
+    constructor(name) {
+        this.name = name;
+    }
+}
+                    </code></pre>
+                    <li>L'initialisation se fait avant l'exécution du constructeur</li>
+                    <li>Possible alors de ne pas initialiser dans le constructeur, voire de ne pas déclarer le constructeur</li>
+                    <pre><code class="language-javascript" data-trim>
+class Person {
+    name = "unknown";
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Getters et setters</h2>
+                <ul>
+                    <li>Pour définir les <em>getters</em> et <em>setters</em>:</li>
+                    <pre><code class="language-javascript" data-trim>
+class Person {
+    _name = "unknown";
+
+    get name() { // getter
+        return this._name;
+    }
+    set name(value) { // setter
+        if (value.length < 3) {
+            alert("Name is too short, need at least 4 characters");
+            return;
+        }
+        this._name = value;
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Getters et setters</h2>
+                <ul>
+                    <li>La propriété <code>_name</code> est exposée via les <em>getters</em> et <em>setters</em> sous le nom <code>name</code></li>
+                    <li>Le <em>getter</em> est invoqué automatiquement lorsqu'on accède en lecture</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+let person = new Person("John");
+console.log(person.name); // John
+                    </code></pre>
+                    <li>Le <em>setter</em> est invoqué automatiquement lorsqu'on accède en écriture</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+person = new Person(""); // Name is too short...
+console.log(person.name); // unknown
+person.name = "Jack";
+console.log(person.name); // Jack
+                    </code></pre>
+                    <li>Si la propriété est déclarée mais pas initialisée, sa valeur est <code>undefined</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Propriétés protégées</h2>
+                <ul>
+                    <li>Dans cet exemple, <code>person</code> contient une propriété <code>_name</code> (et non <code>name</code>)</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+for (let prop in person) {
+    console.log(prop); // _name
+}
+                    </code></pre>
+                    <li>Par convention, on préfixe les propriétés que l'on veut protéger par un <code>_</code></li>
+                    <li>Cependant, la propriété reste accessible et modifiable de l'extérieur</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+person._name = "Bob"; // contournement du setter
+console.log(person.name); // Bob
+                    </code></pre>
+                    <li>On dit que la propriété est <em>protégée</em> plutôt que privée, mais dans les faits elle est publique</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Propriétés privées</h2>
+                <ul>
+                    <li>Depuis ES2022, il est possible de définir des propriétés réellement privées avec <code>#</code></li>
+                    <pre><code class="language-javascript" data-trim>
+class Person {
+    #name;
+    constructor(name) {
+        this.#name = name;
+    }
+    get name() {
+        return this.#name;
+    }
+    set name(value) {
+        if (value.length < 3) {
+            alert("Name is too short, need at least 4 characters");
+            return;
+        }
+        this.#name = value;
+    }
+}
+let john = new Person("John");
+console.log(john.name); // "John"
+john.name = "Jo"; // "Name is too short..." et #name == "John"
+john.#name = "Jo"; // erreur
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Encapsulation</h1>
+                <h2>Propriétés privées</h2>
+                <ul>
+                    <li>Les propriétés privées ne sont accessibles que depuis l'intérieur de la classe</li>
+                    <li>Elles ne sont pas non héritées par les sous-classes</li>
+                    <li>Il n'est pas possible de rendre une propriété accessible uniquement aux sous-classes</li>
+                    <li>Même chose avec les méthodes</li>
+                    <li>Note : les propriétés privées ne sont pas manipulables avec la syntaxe <code>[]</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Vérification de "types"</h1>
+                <ul>
+                    <li>Le polymorphisme nécessite parfois de pouvoir vérifier la classe d'un objet</li>
+                    <li>Pour cela, on utilise l'opérateur <code>instanceof</code></li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+class Rabbit {...}
+let rabbit = new Rabbit();
+alert(rabbit instanceof Rabbit); // true
+                    </code></pre>
+                    <li>On peut vérifier l'appartenance à une hiérarchie de classes</li>
+                    <pre><code class="language-javascript mb-1" data-trim>
+class Animal {...}
+class Rabbit extends Animal {...}
+let rabbit = new Rabbit();
+alert(rabbit instanceof Rabbit); // true
+alert(rabbit instanceof Animal); // true
+                    </code></pre>
+                    <li>La vérification est basée sur la chaîne de prototypes (donc il ne faut pas modifier les prototypes)</li>
+                </ul>
             </section>
 
         </div>
