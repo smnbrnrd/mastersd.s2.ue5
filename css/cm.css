@@ -447,15 +447,15 @@ table {
     border-collapse: collapse;
 }
 thead, tbody, tfoot, tr, td, th {
-    padding: 0.1rem !important;
+    padding: 0.2rem !important;
     margin: 0 !important;
 }
-th {
+/*th {
     background-color: var(--quaternary-color);
     text-align: center;
     border: solid 1px var(--primary-color);
     padding: 0.1rem 0.4rem !important;
-}
+}*/
 
 table > tbody {
   vertical-align: inherit;

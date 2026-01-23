@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master SD - Conception d'Interface Web - Travaux Pratiques</title>
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css/normalize.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
@@ -36,7 +37,6 @@
         </nav>
     </aside>
 
-
     <main class="numbered-title order-1">
 
         <h1>Web Dynamique côté Client</h1>
@@ -47,9 +47,76 @@
 
             <section>
                 <h4 id="preparation">Préparation</h4>
-                <p>In progress...</p>
+                <p>Le but est de créer une interface de gestion de contacts, similaire à celle montrée dans la figure ci-dessous.</p>
+                <a href="../img/contacts-screen1.png" target="_blank"><img src="../img/contacts-screen1.png" class="w-100 m-auto mt-2 mb-4"></a>
+                <p>Commencez par créer la page HTML qui hébergera l'interface et dans laquelle sera exécutée le code JavaScript qui prendra en charge les fonctionnalités:</p>
+                <ol>
+                    <li>Créez une page <code>contacts.html</code> qui contient</li>
+                    <ul>
+                        <li>Un tableau HTML de 5 colonnes, comme montré sur la figure ci-dessus. Pour le moment, le tableau est vide à l'exception de la ligne d'en-tête qui contient les titres des colonnes.</li>
+                        <li>Une balise <code>script</code> avec l'instruction suivante:</li>
+                        <pre><code class="language-js" data-trim>
+document.addEventListener("DOMContentLoaded", displayContacts);
+                        </code></pre>
+                        Cette instruction permet de déclencher l'exécution d'une fonction <code>displayContacts</code> à la fin du chargement de la page HTML.
+                    </ul>
+                    <li>Créez un script <code>contacts.js</code> dans lequel est définie une fonction <code>displayContacts</code> qui affiche un message dans la console.</li>
+                    <li>Testez votre page HTML en l'ouvrant dans un navigateur et vérifiez que le message s'affiche bien dans la console.</li>
+                </ol>
+                <p>Vous êtes libre d'utiliser Bootstrap et/ou d'ajouter vos propres styles CSS pour mettre en page votre interface.</p>
             </section>
 
+            <section>
+                <h4>Création de contacts en JS</h4>
+                <p>La deuxième étape consiste à créer des objets JavaScript pour représenter les contacts. Un contact est caractérisé par:</p>
+                <ul>
+                    <li>une propriété <code>firstname</code> qui contient le prénom du contact</li>
+                    <li>une propriété <code>lastname</code> qui contient son nom</li>
+                    <li>une propriété <code>email</code> qui contient son adresse mail</li>
+                    <li>une propriété <code>phone</code> qui contient son numéro de téléphone</li>
+                </ul>
+                <ol>
+                    <li>Dans votre script <code>contacts.js</code>, créez 3 objets JS avec les propriétés décrites ci-dessus, et contenant les valeurs montrées sur la figure ci-dessus.</li>
+                    <li>Créez un tableau JS rassemblant ces objets.</li>
+                    <li>Modifiez la fonction <code>displayContacts</code> pour qu'elle parcourt le tableau et pour chaque objet "contact", ajoute une ligne dans le tableau HTML. Pour chaque ligne, la dernière colonne contient trois boutons d'actions, inopérants pour le moment.</li>
+                </ol>
+                <p>Note: pour parcourir un tableau en JavaScript, vous pouvez utiliser une boucle <code>for..of</code> (<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Statements/for...of" target="_blank">documentation</a>) ou la méthode <code>forEach</code> (<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach" target="_blank">documentation</a>).</p>
+            </section>
+
+            <section>
+                <h4 id="preparation">Constructeur de contact</h4>
+                <p>Pour faciliter la création de nouveaux contacts:</p>
+                <ol>
+                    <li>Définissez une fonction constructeur <code>Contact</code> qui prend en paramètres les informations d'un contact et initialise les propriétés de l'objet.</li>
+                    <li>Modifiez le code de création des contacts pour utiliser ces constructeurs. Ajoutez 7 nouveaux contacts et affichez-les dans le tableau HTML, comme montré sur la figure ci-dessous.</li>
+                </ol>
+                <a href="../img/contacts-screen2.png" target="_blank"><img src="../img/contacts-screen2.png" class="w-100 m-auto mt-2 mb-4"></a>
+            </section>
+
+            <section>
+                <h4 id="preparation">Filtrer les contacts</h4>
+                <p>On propose maintenant d'ajouter une barre de filtre en haut de la page, comme montré sur la figure ci-dessous.</p>
+                <a href="../img/contacts-screen3.png" target="_blank"><img src="../img/contacts-screen3.png" class="w-100 m-auto mt-2 mb-4"></a>
+                <p>Cette barre est un champs de saisie qui permet à l'utilisateur de saisir du texte pour filtrer les contacts affichés dans le tableau. À chaque cacratère saisi dans la barre, le contenu du tableau HTML se met à jour pour ne laisser afficher que les contacts ciblés. Un contact est ciblé si l'une de ses propriétés contient le texte saisi. Par exemple, dans l'image ci-dessus, seuls les contacts contenant "univ-rouen" dans leur adresse mail ont été conservés dans le tableau.</p>
+                <ul>
+                    <li>Ajoutez la barre de saisie dans votre page HTML, au dessus du tableau de contact. Il s'agit d'un simple <code>input</code> de type texte, éventuellement inclus dans un <code>div</code> conteneur.</li>
+                    <li>Dans <code>contacts.js</code>, définissez la fonction <code>filterContacts</code> qui:</li>
+                    <ul>
+                        <li>récupère le texte saisi dans la barre de filtre</li>
+                        <li>récupère l'élément correspond au corps du tableau HTML et le vide</li>
+                        <li>parcourt le tableau des contacts et pour chacun d'eux, vérifie s'il correspond au filtre</li>
+                        <li>met à jour le tableau HTML pour ajouter une ligne pour chaque contact ciblé</li>
+                    </ul>
+                    <li>ajoutez un écouteur d'événement sur la barre de filtre pour appeler la fonction <code>filterContacts</code> à chaque saisie</li>
+                </ul>
+            </section>
+
+            <section>
+                <h4 id="preparation">Modification et suppression d'un contact</h4>
+                <p></p>
+            </section>
+
+        </section>
     </main>
 
     <footer>

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Conception d'Interface Web</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Client</div>
+                <div class="subtitle">Les objets en JavaScript</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Dans ce chapitre</h1>
+                <ol>
+                    <li>Les objets en JavaScript</li>
+                    <li>La programmation orientée objet</li>
+                    <li>Objets standards</li>
+                    <ul>
+                        <li>Tableaux</li>
+                        <li>String</li>
+                        <li>Number</li>
+                        <li>Map, Set</li>
+                        <li>JSON</li>
+                    </ul>
+                    <li>Angular</li>
+                    <li>AJAX</li>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Objets natifs standards</h1>
+                <ul>
+                    <li>JS prédéfinit des objets standards, disponibles de façon native</li>
+                    <li>Portée globale, c'est-à-dire accessibles partout dans le code</li>
+                    <li>Fournissent des fonctionnalités de base, rendues accessibles par héritage prototypal</li>
+                </ul>
+                <figure class="mt-3">
+                    <img src="figures/chap2/nativeprototype.png" class="w-60 m-auto">
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Objets natifs standards</h1>
+                <h2>Exemples</h2>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th>Constructeur</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>Object</code></td>
+                            <td>Base pour tous les sous-type d'objets</td>
+                        </tr>
+                        <tr>
+                            <td><code>Function</code></td>
+                            <td>Prototype pour les fonctions (rappel: les fonctions sont des objets en JS)</td>
+                        </tr>
+                        <tr>
+                            <td><code>Math</code></td>
+                            <td>Fournit des constantes et des fonctions mathématiques</td>
+                        </tr>
+                        <tr>
+                            <td><code>Date</code></td>
+                            <td>Représente des dates et heures</td>
+                        </tr>
+                        <tr>
+                            <td><code>String</code></td>
+                            <td>Représente des chaînes de caractères et fournit des méthodes pour les manipuler</td>
+                        </tr>
+                        <tr>
+                            <td><code>Array</code></td>
+                            <td>Représente des tableaux et fournit des méthodes pour les manipuler</td>
+                        </tr>
+                        <tr>
+                            <td><code>Map</code></td>
+                            <td>Représente un dictionnaire</td>
+                        </tr>
+                        <tr>
+                            <td><code>Set</code></td>
+                            <td>Représente une collection d'éléments uniques</td>
+                        </tr>
+                        <tr>
+                            <td><code>RegExp</code></td>
+                            <td>Représente des expressions régulières pour la recherche et la manipulation de chaînes de caractères</td>
+                        </tr>
+                        <tr>
+                            <td><code>Boolean</code></td>
+                            <td>Objet enveloppe pour les valeurs booléennes (true/false)</td>
+                        </tr>
+                        <tr>
+                            <td><code>Number</code></td>
+                            <td>Objet enveloppe pour les valeurs numériques</td>
+                        </tr>
+                        <tr>
+                            <td><code>Error</code></td>
+                            <td>Base pour les objets d'erreur</td>
+                        </tr>
+                        <tr>
+                            <td><code>RangeError</code></td>
+                            <td>Erreur générée lorsqu'une valeur n'est pas dans l'ensemble ou la plage autorisée</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!--------------------------------------------->
+            <section>
+                <h1>Tableaux</h1>
+                <ul>
+                    <li>Les tableaux sont des collections ordonnées d'éléments</li>
+                    <li>Dynamique: leur taille peut changer au cours de l'exécution du programme</li>
+                    <li>Héritent des propriétés et méthodes de l'objet standard <code>Array</code></li>
+                </ul>
+                <div class="row">
+                    <div class="col-50">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+let tab = ["un", "deux", "trois"];
+console.log(tab.length);          // 3
+console.log(typeof tab);          // "object"
+console.log(tab.toString());      // "un,deux,trois"
+                        </code></pre>
+                    </div>
+                    <div class="col-50">
+                        <figure>
+                            <img src="figures/chap3/array1.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Création de tableaux</h1>
+                <ul>
+                    <li>Création avec expression littérale ou constructeur</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let tab1 = []; // tableau vide
+let tab2 = new Array(3); // tableau de 3 éléments non initialisés
+                    </code></pre>
+                    <li>Initialisé avec n'importe quel type de valeurs</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let tab3 = ["un", "deux", "trois"];
+let tab4 = [1, 2, 3, 4, 5];
+let tab5 = new Array("un", "deux", "trois");
+                    </code></pre>
+                    <li>Peut contenir des éléments de types différents</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let tab6 = [1, "deux", 3];
+let tab7 = [1, [1, 2, 3], {nom: "Dupont", prenom: "Jean"}];
+let tab8 = [function() { return "Hello"; }, true, null];
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux éléments</h1>
+                <ul>
+                    <li>Utilisation d'un indice entre crochets <code>[]</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let fruits = ["Apple", "Orange", "Plum"];
+console.log(fruits[0]);  // "Apple"
+console.log(fruits[1]);  // "Orange"
+console.log(fruits[2]);  // "Plum"
+                    </code></pre>
+                    <li>Accès en lecture et en écriture</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+fruits[1] = "Banana";  // Modification de l'élément à l'indice 1
+console.log(fruits[1]);  // "Banana"
+                    </code></pre>
+                    <li>Ajout d'éléments après la création</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let fruits = ["Apple", "Orange"];
+fruits[2] = "Plum";  // Ajout d'un élément
+console.log(fruits.toString());  // "Apple,Orange,Plum"
+
+fruits[10] = "Mango";  // Ajout à un indice éloigné
+console.log(fruits.toString());  // "Apple,Orange,Plum,,,,,,,Mango"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux éléments</h1>
+                <ul>
+                    <li>Les tableaux sont en fait des objets dont les indices sont des noms de propriétés:</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+console.log(fruits["1"]);  // "Banana" est la valeur de la propriété "1"
+console.log(fruits[20]);  // undefined
+console.log(fruits["deux"]);  // undefined
+console.log(fruits.1);  // Erreur de syntaxe
+                    </code></pre>
+                    Les propriétés "20" et "deux" n'existent pas dans l'objet tableau. Les propriétés dont le nom est un entier ne sont pas compatibles avec la notation par point.
+                    <li>Mais les tableaux étendent les objets en fournissant des méthodes spécifiques</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+console.log(fruits.length);  // 11
+console.log(fruits.indexOf("Plum"));  // 2
+console.log(fruits.sort());  // ["Apple", "Banana", "Mango", "Plum"]
+                    </code></pre>
+                    <li>Et JS optimise le stockage en mémoire et la manipulation</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Accès aux éléments</h1>
+                <h2>Remarque sur la propriété <code>length</code></h2>
+                <ul>
+                    <li><code>length</code> est une propriété ajoutée automatiquement, qui indique le nombre d'éléments dans le tableau</li>
+                    <li>Mise à jour automatiquement lors de l'ajout ou la suppression d'éléments</li>
+                    <li>Modification manuelle pour tronquer ou étendre le tableau</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+fruits.length = 3;  // Tronque le tableau à 3 éléments
+console.log(fruits.toString());  // "Apple,Banana,Mango"
+fruits.length = 5;  // Étend le tableau à 5 éléments
+console.log(fruits.toString());  // "Apple,Banana,Mango,,"
+                    </code></pre>
+                    <li>Elle est modifiable mais pas énumérable</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+for (let key in fruits) {
+    console.log(key); 
+}  // Affiche les indices 0, 1, 2, 3, 4 mais pas "length"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Parcours</h1>
+                <ul>
+                    <li>Plusieurs façons de parcourir les éléments d'un tableau</li>
+                    <li>La plus classique: boucle <code>for</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+for (let i = 0; i < fruits.length; i++) {
+    console.log(fruits[i]);
+}
+                    </code></pre>
+                    <li>La boucle <code>for..of</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+for (let fruit of fruits) {
+    console.log(fruit);
+}
+                    </code></pre>
+                    <li>La méthode <code>forEach</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+fruits.forEach(function(fruit, index) {
+    console.log(index + ": " + fruit);
+});
+                    </code></pre>
+                    <li>Préférable d'éviter <code>for..in</code> pour les tableaux car elle itère sur toutes les propriétés énumérables et elle est beaucoup moins performantes avec les tableaux</li>
+                </ul>
+            </section>
+
+            <!---------------------------------------------
+            <section>
+                <h1>Tableaux vs objets</h1>
+                <p>Comme les tableaux sont des objets, on peut les utiliser comme tels, c'est-à-dire:</p>
+                <ul>
+                    <li>Définir des clés pour les éléments</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let tab = [];
+tab["un"] = 1;
+tab["deux"] = 2;
+console.log(tab["un"]);  // 1
+                    </code></pre>
+                    <li>Problème:</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+console.log(tab.length);  // 0
+console.log(tab[0]);  // undefined
+                    </code></pre>
+                    <li>Intérêt par rapport aux objets ou aux map?</li>
+                </ul>
+            </section>-->
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Piles et files</h1>
+                <ul>
+                    <li><code>Array</code> fournit des méthodes pour utiliser les tableaux comme des piles (LIFO) ou des files (FIFO)</li>
+                    <li>Méthodes pour les piles:</li>
+                    <ul>
+                        <li><code>push(...éléments)</code>: ajoute un ou plusieurs éléments à la fin du tableau</li>
+                        <li><code>pop()</code>: supprime et retourne le dernier élément du tableau</li>
+                    </ul>
+                    <li>Méthodes pour les files:</li>
+                    <ul>
+                        <li><code>shift()</code>: supprime et retourne le premier élément du tableau</li>
+                        <li><code>unshift(...éléments)</code>: ajoute un ou plusieurs éléments au début du tableau</li>
+                    </ul>
+                    <li>Les méthodes <code>push</code>/<code>pop</code> sont rapides, contrairement à <code>shift</code>/<code>unshift</code> qui sont lentes car elles nécessitent de décaler tous les éléments du tableau</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthode <code>splice</code></h1>
+                <ul>
+                    <li><code>splice</code>: remplacer, retirer ou insérer de nouveaux éléments</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+tab.splice(start[, deleteCount[, item1, item2, ...]]);
+                    </code></pre>
+                    Modifie <code>tab</code> en retirant <code>deleteCount</code> éléments à partir de l'indice <code>start</code> et en insérant les éléments <code>item1, item2, ...</code> à cette position.
+                    <pre class="mt-2"><code class="language-javascript compact" data-trim>
+let fruits = ["Apple", "Banana", "Mango"];
+removed = fruits.splice(2);
+console.log(fruits.toString());  // "Apple,Banana"
+console.log(removed.toString());  // "Mango"
+
+removed = fruits.splice(1, 1, "Orange", "Plum");
+console.log(fruits.toString());  // "Apple,Orange,Plum"
+console.log(removed.toString());  // "Banana"
+
+removed = fruits.splice(-2);
+console.log(fruits.toString());  // "Apple"
+console.log(removed.toString());  // "Orange,Plum"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Recherche dans un tableau</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Méthodes</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>includes</code></td>
+                            <td>Retourne <code>true</code> si le tableau contient l'élément spécifié, <code>false</code> sinon</td>
+                        </tr>
+                        <tr>
+                            <td><code>indexOf</code>/<code>lastIndexOf</code></td>
+                            <td>Retourne le premier ou le dernier indice où l'élément est trouvé dans le tableau, ou -1 s'il n'est pas présent</td>
+                        </tr>
+                        <tr>
+                            <td><code>find</code>/<code>findIndex</code></td>
+                            <td>Retourne la valeur ou l'index du premier élément du tableau qui passe le test implémenté par la fonction fournie, ou <code>undefined</code> si aucun élément ne le passe</td>
+                        </tr>
+                        <tr>
+                            <td><code>filter</code></td>
+                            <td>Retourne un nouveau tableau avec tous les éléments vérifiant le test implémenté par la fonction fournie</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre class="mb-2"><code class="language-javascript compact" data-trim>
+let fruits = ["Apple", "Banana", "Mango", "Banana"];
+
+console.log(fruits.includes("Banana"));  // true
+console.log(fruits.indexOf("Banana"));   // 1
+console.log(fruits.lastIndexOf("Banana")); // 3
+
+let mFruits = fruits.find(function(fruit) {
+    return fruit.startsWith("M");
+});
+console.log(mFruits);  // "Mango"
+
+let longFruits = fruits.filter(function(fruit) {
+    return fruit.length > 5;
+});
+console.log(longFruits.toString());  // "Banana,Banana"
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Transformer un tableau</h1>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Méthodes</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>sort</code>/<code>reverse</code></td>
+                            <td>Trie ou inverse l'ordre des éléments du tableau et retourne le tableau résultant</td>
+                        </tr>
+                        <tr>
+                            <td><code>split</code>/<code>join</code></td>
+                            <td>Convertit une chaîne de caractères en tableau ou un tableau en chaîne de caractères</td>
+                        </tr>
+                        <tr>
+                            <td><code>map</code></td>
+                            <td>Crée un nouveau tableau avec les résultats de l'appel d'une fonction fournie sur chaque élément du tableau</td>
+                        </tr>
+                        <tr>
+                            <td><code>reduce</code></td>
+                            <td>Applique une fonction à un accumulateur et à chaque valeur du tableau (de gauche à droite) pour réduire le tableau à une seule valeur</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre class="mb-2"><code class="language-javascript compact" data-trim>
+let numbers = [1, 2, 3, 4, 5];
+let doubled = numbers.map(function(num) {
+    return num * 2;
+});
+console.log(doubled.toString());  // "2,4,6,8,10"
+
+let sum = numbers.reduce(function(acc, num) {
+    return acc + num;
+}, 0);
+console.log(sum);  // 15
+
+let str = "Hello, World!";
+let chars = str.split(", "); // ["Hello", "World!"]
+let joined = chars.join(" - ");
+console.log(joined);  // "Hello - World!"
+                </code></pre>
+
+            </section>
+
+            
+            <!--------------------------------------------->
+            <section>
+                <h1>Itérateurs</h1>
+                <ul>
+                    <li>Certaines des méthodes sont des itérateurs: appliquent une fonction à chaque élément du tableau, et retournent un nouveau tableau ou une valeur</li>
+                    <li>Pour simplifier le code: fonctions fléchées et chaînage:</li>
+                    <pre class="mt-2"><code class="language-javascript compact" data-trim>
+let numbers = [1, 2, 3, 4, 5];
+let res1 = numbers.map(function(num) {
+    return num * 3; 
+});
+let res2 = res1.filter(function(num) {
+    return num > 10;
+});
+let res3 = res2.reduce(function(acc, num) {
+    return acc + num;
+}, 0);
+console.log(res3);  // 27
+
+// devient
+let chainedResult = numbers
+    .map(num => num * 3)                    // [3, 6, 9, 12, 15]
+    .filter(num => num > 10)                // [12, 15]
+    .reduce((acc, num) => acc + num, 0);    // 27
+console.log(chainedResult);  // 27
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>String</h1>
+                <ul>
+                    <li>Rappel: <code>string</code> est un type primitif pour représenter des chaînes de caractères</li>
+                    <li>Une chaîne de caractères est un tableau de caractères (pas de type spécifique pour les caractères)</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "Hello, World!";
+let char = "H"
+console.log(typeof str);  // "string"
+console.log(typeof char); // "string"
+console.log(char === str[0]);  // true
+                    </code></pre>
+                    <li>Trois syntaxes littérales pour les chaînes de caractères:</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str1 = "Double quotes";
+let str2 = 'Single quotes';
+let str3 = `Backticks (template literals)`;
+                    </code></pre>
+                    <li>Les <em>backticks</em> permettent d'inclure des expressions avec la syntaxe <code>${expression}</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let name = "Alice";
+let greeting = `Hello, ${name}!`;
+console.log(greeting);  // "Hello, Alice!"
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>String</h1>
+                <ul>
+                    <li>Les chaînes de caractères héritent des propriétés et méthodes de l'objet standard <code>String</code></li>
+                    <li>Quand on accède à une propriété ou une méthode, JS crée un objet temporaire pour permettre l'accès</li>
+                    <li>Cet objet est de type <code>String</code>: classe enveloppe (<em>wrapper class</em>)</li>
+                </ul>
+                <div class="row">
+                    <div class="col-50">
+                        <pre class="mt-5"><code class="language-javascript" data-trim>
+let str = "Hello";
+console.log(str.length);          // 5
+console.log(str.toUpperCase());   // "HELLO"
+console.log(str.trim());          // "Hello"
+
+// mais str n'est pas un objet:
+let objStr = new String("Hello");
+console.log(typeof str);  // "string"
+console.log(typeof objStr);   // "object"
+console.log(str === objStr);  // false
+                        </code></pre>
+                    </div>
+                    <div class="col-50">
+                        <figure>
+                            <img src="figures/chap3/string1.png" class="w-90 m-auto">
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Immutabilité</h1>
+                <ul>
+                    <li>Les chaînes de caractères sont immutables = ne peuvent pas être modifiées</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "Hello";
+str[0] = "P";  // Ignoré, str reste " Hello "
+console.log(str);  // "Hello"
+str.toUpperCase();
+console.log(str);  // "Hello"
+                    </code></pre>
+                    <li>Pour modifier une chaîne, il faut créer une nouvelle chaîne</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "Hello";
+str = str.toUpperCase()  // Crée et renvoie une nouvelle chaîne
+console.log(str);  // "HELLO"
+                    </code></pre>
+                    <li>Toutes les propriétés des objets <code>String</code> sont non modifiables</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Rechercher une sous-chaîne</h1>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Méthodes</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>includes</code></td>
+                            <td>Retourne <code>true</code> si la chaîne contient la sous-chaîne spécifiée, <code>false</code> sinon</td>
+                        </tr>
+                        <tr>
+                            <td><code>startsWith</code>/<code>endsWith</code></td>
+                            <td>Retourne <code>true</code> si la chaîne commence ou se termine par la sous-chaîne spécifiée, <code>false</code> sinon</td>
+                        </tr>
+                        <tr>
+                            <td><code>indexOf</code>/<code>lastIndexOf</code></td>
+                            <td>Retourne l'indice de début de la première ou dernière sous-chaîne dans la chaîne, ou -1 si elle n'est pas présente</td>
+                        </tr>
+                        <tr>
+                            <td><code>search</code>/<code>match</code>/<code>matchAll</code></td>
+                            <td>Méthodes de recherche basées sur des expressions régulières</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "You know nothing Jon Snow";
+console.log(str.includes("Jon"));          // true
+console.log(str.startsWith("You"));        // true
+console.log(str.endsWith("Snow"));         // true
+console.log(str.indexOf("no"));            // 4
+console.log(str.lastIndexOf("no"));        // 22
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Récupérer une sous-chaîne</h1>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Méthodes</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>slice</code></td>
+                            <td>Retourne la sous-chaîne de l'indice <code>start</code> à l'indice <code>end</code> (non inclus)</td>
+                        </tr>
+                        <tr>
+                            <td><code>substring</code></td>
+                            <td>Similaire à <code>slice</code>, mais ne supporte pas les indices négatifs</td>
+                        </tr>
+                        <tr>
+                            <td><code>substr</code></td>
+                            <td>Retourne la sous-chaîne de l'indice <code>start</code> et de longueur <code>length</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "You know nothing Jon Snow";
+console.log(str.substring(4, 8));   // "know"
+
+console.log(str.slice(4, 8));        // "know"
+console.log(str.slice(-4));          // "Snow"
+
+console.log(str.substr(4));          // "know nothing Jon Snow"
+console.log(str.substr(4, 4));       // "know"
+                </code></pre>
+                <p>Note: Les différences entre <code>slice</code> et <code>substring</code> sont principalement dans la gestion des indices illicites (e.g. négatifs, dans le mauvais ordre, supérieur à <code>length</code>)</p>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Comparer des chaînes</h1>
+                <ul>
+                    <li>Opérateurs de comparaison (<code>==</code>, <code>===</code>, <code>&lt;</code>, <code>&gt;</code>, etc.): ordre lexicographique basé sur les points de code (rang Unicode) des caractères</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+console.log("apple" < "banana");  // true
+console.log("apple" < "apples");  // true
+console.log("apple" < "Apple");   // false (Unicode)
+                    </code></pre>
+                    <li><code>codePointAt</code>: renvoie le point de code d'un caractère de la chaîne</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str = "BananA";
+console.log(str.codePointAt(1));  // 97 (point de code de 'a')
+console.log(str.codePointAt(5));  // 65 (point de code de 'A')
+                    </code></pre>
+                    <li><code>localeCompare</code> pour une comparaison locale:</li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let str1 = "Zoé";
+let str2 = "Zoo";
+console.log(str1 < str2);  // false (code de é (233) > code de o (111))
+console.log(str1.localeCompare(str2));  // > 0 (basé sur la langue du locale, e.g. fr)
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Number</h1>
+                <ul>
+                    <li>Sur le même schéma, <code>Number</code> est le type enveloppe du type primitif <code>number</code></li>
+                    <li>Surtout utile pour les conversions et pour accéder aux valeurs particulières (e.g. <code>Number.MAX_VALUE</code>, <code>Number.NaN</code>, etc.)</li>
+                </ul>
+                <pre class="mt-3"><code class="language-javascript compact" data-trim>
+console.log(Number.MAX_VALUE);  // 1.7976931348623157e+308
+console.log(Number.MIN_VALUE);   // 5e-324
+
+Number("123"); // 123
+Number("12.3"); // 12.3
+Number("123e-1"); // 12.3
+Number(""); // 0
+Number("0x11"); // 17
+Number("0b11"); // 3
+Number("foo"); // NaN
+Number("123abc"); // NaN
+
+Number.parseInt("123abc"); // 123
+
+Number(53).toString(2); // "110101" => représentation binaire
+Number(255).toString(16); // "ff" => représentation hexadécimale
+Number(3.14159).toFixed(4); // "3.1416" => arrondi à 4 décimales
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Map</h1>
+                <ul>
+                    <li><code>Object</code> = collection d'éléments identifiés par des clés de type <code>string</code></li>
+                    <li><code>Array</code> = collection ordonnée d'éléments indexés par des entiers</li>
+                    <li><code>Map</code> = collection d'éléments identifiés par des clés de n'importe quel type (objets, fonctions, etc.)</li>
+                    <li>Ajouter ou mettre à jour une paire clé-valeur: méthode <code>set</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+let map = new Map();
+map.set("name", "Alice");
+map.set(42, "The answer");
+map.set(true, "Boolean key");
+let john = {firstName: "John", lastName: "Doe"};
+map.set(john, 42);
+console.log(map.size);  // 4
+                    </code></pre>
+                    <li>Accéder aux valeurs par clé: méthode <code>get</code></li>
+                    <pre class="mb-2"><code class="language-javascript" data-trim>
+console.log(map.get("name"));  // "Alice"
+console.log(map.get(42));      // "The answer"
+console.log(map.get(true));    // "Boolean key"
+console.log(map.get(john));    // 42
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Parcourir un Map</h1>
+                <ul>
+                    <li><code>keys()</code>: obtenir un itérateur sur les clés</li>
+                    <li><code>values()</code>: obtenir un itérateur sur les valeurs</li>
+                    <li><code>entries()</code>: obtenir un itérateur sur les paires clé-valeur</li>
+                    <li>L'ordre d'insertion est préservé (pas toujours garanti avec un <code>Object</code>)</li>
+                </ul>
+                <pre class="mt-2"><code class="language-javascript" data-trim>
+let fruitsQuantities = new Map([
+    ["apple", 10],
+    ["banana", 25],
+    ["mango", 4]
+]);
+
+for (let key of fruitsQuantities.keys()) {
+    console.log(key);  // apple, banana, mango
+}
+for (let value of fruitsQuantities.values()) {
+    console.log(value);  // 10, 25, 4
+}
+for (let [key, value] of fruitsQuantities.entries()) {
+    console.log(key + " => " + value);  // apple => 10, banana => 25, mango => 4
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Set</h1>
+                <ul>
+                    <li>Collection d'éléments uniques (sans clé)</li>
+                    <li>Ajout avec <code>add()</code>, suppression avec <code>delete()</code>, test avec <code>has()</code>, parcours avec <code>for...of</code> ou <code>forEach()</code></li>
+                    <li>Si ajout d'un élément déjà présent, il est ignoré</li>
+                </ul>
+                <pre class="mt-2"><code class="language-javascript" data-trim>
+let set = new Set();
+
+let john = {firstName: "John", lastName: "Doe"};
+let jane = {firstName: "Jane", lastName: "Doe"};
+let bob = {firstName: "Bob", lastName: "Smith"};
+
+set.add(john);
+set.add(jane);
+set.add(bob);
+set.add(john);  // Ignoré, john est déjà dans le set
+
+console.log(set.size);  // 3
+
+for (let person of set) {
+    console.log(person.firstName + " " + person.lastName);  // John Doe, Jane Doe, Bob Smith
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSON</h1>
+                <ul>
+                    <li>JSON = JavaScript Object Notation</li>
+                    <li>Facilite la conversion des objets JavaScript en chaînes de caractères et vice versa</li>
+                    <li>Très utilisé pour l'échange de données entre un client et un serveur</li>
+                    <li>Deux méthodes principales:</li>
+                    <ul>
+                        <li><code>JSON.stringify(value)</code>: convertit une valeur JS en chaîne JSON</li>
+                        <li><code>JSON.parse(text)</code>: convertit une chaîne JSON en valeur JS</li>
+                    </ul>
+                </ul>
+                <pre class="mt-2"><code class="language-javascript compact" data-trim>
+let student = {
+  name: 'John',
+  age: 30,
+  isAdmin: false,
+  courses: ['html', 'css', 'js'],
+  spouse: null
+};
+let json = JSON.stringify(student);
+console.log(json);  // {"name":"John","age":30,"isAdmin":false,"courses":["html","css","js"],"spouse":null}
+/* en plus lisible: 
+{
+  "name": "John",
+  "age": 30,
+  "isAdmin": false,
+  "courses": ["html", "css", "js"],
+  "spouse": null
+}
+*/
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSON</h1>
+                <ul>
+                    <li>Possible de redéfinir <code>toJSON()</code> dans un objet, pour personnaliser la conversion</li>
+                    <li>La méthode <code>toJSON()</code> est appelée automatiquement par <code>JSON.stringify()</code></li>
+                </ul>
+                <pre class="mt-2"><code class="language-javascript compact" data-trim>
+let room = {
+  number: 23,
+  toJSON() {
+    return this.number;
+  }
+};
+
+let meetup = {
+  title: "Conference",
+  date: new Date(Date.UTC(2017, 0, 1)),
+  room
+};
+
+console.log( JSON.stringify(meetup) );
+/*
+  {
+    "title":"Conference",
+    "date":"2017-01-01T00:00:00.000Z",  ==> Date convertie via sa propre toJSON()
+    "room": 23                          ==> room converti via sa propre toJSON()
+  }
+*/
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSON</h1>
+                <ul>
+                    <li>La conversion inverse est réalisée avec <code>JSON.parse()</code></li>
+                    <li>Demande parfois une fonction de rappel pour transformer les valeurs</li>
+                </ul>
+                <pre class="mt-2"><code class="language-javascript compact" data-trim>
+let json = `{
+  "title":"Conference",
+  "date":"2017-01-01T00:00:00.000Z",
+  "room":23
+}`;
+
+let meetup = JSON.parse(json);
+console.log( meetup.date.getDate() ); // Erreur, date est une chaîne, pas une Date
+
+// solution:
+let meetup = JSON.parse(json, function(key, value) {
+  if (key == 'date') return new Date(value);
+  return value;
+});
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>En résumé</h1>
+                <ul>
+                    <li><code>Array</code>: </li>
+                    <ul>
+                        <li>Collection ordonnée d'éléments, indexés par des entiers</li>
+                        <li>méthodes de manipulation performantes (ajout, suppression, recherche, transformation, etc.)</li>
+                    </ul>
+                    <li><code>String</code>: </li>
+                    <ul>
+                        <li>Classe enveloppe pour manipuler les chaînes de caractères</li>
+                        <li>Beaucoup de méthodes utiles de transformation, recherche, etc.</li>
+                    </ul>
+                    <li><code>Number</code>: Classe enveloppe pour les conversions en nombre</li>
+                    <li><code>Map</code>: Collection d'éléments identifiés par des clés de n'importe quel type</li>
+                    <li><code>Set</code>: Collection d'éléments uniques, sans clé</li>
+                    <li><code>JSON</code>: </li>
+                    <ul>
+                        <li>Format d'échange de données léger et facile à lire/écrire</li>
+                        <li>Méthodes pour convertir entre objets JS et chaînes JSON</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Quelques liens pour approfondir...</h1>
+                <ul>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank">Documentation MDN des Array</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">Documentation MDN des String</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">Documentation MDN des Number</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map" target="_blank">Documentation MDN des Map</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set" target="_blank">Documentation MDN des Set</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON" target="_blank">Documentation MDN des JSON</a></li>
+                    <li><a href="https://javascript.info/data-types" target="_blank">JavaScript Info - Data Types</a></li>
+                </ul>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
