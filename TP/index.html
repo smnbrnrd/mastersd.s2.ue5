@@ -24,12 +24,58 @@
             <h2 class ="link-dark text-decoration-none border-bottom p-2 mb-3">Table des matières</h2>
             <ul class="list-unstyled" id="navbarTogglerDemo03">
                 <li class="mb-1">
-                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#html-collapse" aria-expanded="false">
-                        Objets en JS
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#contacts-collapse" aria-expanded="false">
+                        Gestion de contacts
                     </button>
-                    <div class="collapse" id="html-collapse">
+                    <div class="collapse" id="contacts-collapse">
                         <ul class="btn-toggle-nav list-unstyled">
                             <li><a href="#preparation" class="d-inline-flex align-items-center rounded">Préparation</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="contacts-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#creation" class="d-inline-flex align-items-center rounded">Création de contacts</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="contacts-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#constructeur" class="d-inline-flex align-items-center rounded">Constructeur de contacts</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="contacts-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#filtrer" class="d-inline-flex align-items-center rounded">Filtrer les contacts</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="contacts-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#suppression" class="d-inline-flex align-items-center rounded">Suppression d'un contact</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#shapes-collapse" aria-expanded="false">
+                        Dessins de formes géométriques
+                    </button>
+                    <div class="collapse" id="shapes-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#preparation2" class="d-inline-flex align-items-center rounded">Préparation</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="shapes-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#shape" class="d-inline-flex align-items-center rounded">La classe Shape</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="shapes-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#square-triangle" class="d-inline-flex align-items-center rounded">Les classes Square et Triangle</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="shapes-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#rectangle" class="d-inline-flex align-items-center rounded">La classe Rectangle</a></li>
                         </ul>
                     </div>
                 </li>
@@ -43,7 +89,7 @@
         <h2>Travaux Pratiques</h2>
 
         <section>
-            <h3 id="html">Les objets en JavaScript</h3>
+            <h3 id="html">Gestion de contacts</h3>
 
             <section>
                 <h4 id="preparation">Préparation</h4>
@@ -58,16 +104,16 @@
                         <pre><code class="language-js" data-trim>
 document.addEventListener("DOMContentLoaded", displayContacts);
                         </code></pre>
-                        Cette instruction permet de déclencher l'exécution d'une fonction <code>displayContacts</code> à la fin du chargement de la page HTML.
+                        Cette instruction permet de déclencher l'exécution d'une fonction <code>displayContacts</code> à la fin du chargement du DOM.
                     </ul>
                     <li>Créez un script <code>contacts.js</code> dans lequel est définie une fonction <code>displayContacts</code> qui affiche un message dans la console.</li>
                     <li>Testez votre page HTML en l'ouvrant dans un navigateur et vérifiez que le message s'affiche bien dans la console.</li>
                 </ol>
-                <p>Vous êtes libre d'utiliser Bootstrap et/ou d'ajouter vos propres styles CSS pour mettre en page votre interface.</p>
+                <p>Note: vous pouvez utiliser Bootstrap et/ou d'ajouter vos propres styles CSS pour mettre en page votre interface.</p>
             </section>
 
             <section>
-                <h4>Création de contacts en JS</h4>
+                <h4 id="creation">Création de contacts en JS</h4>
                 <p>La deuxième étape consiste à créer des objets JavaScript pour représenter les contacts. Un contact est caractérisé par:</p>
                 <ul>
                     <li>une propriété <code>firstname</code> qui contient le prénom du contact</li>
@@ -76,7 +122,7 @@ document.addEventListener("DOMContentLoaded", displayContacts);
                     <li>une propriété <code>phone</code> qui contient son numéro de téléphone</li>
                 </ul>
                 <ol>
-                    <li>Dans votre script <code>contacts.js</code>, créez 3 objets JS avec les propriétés décrites ci-dessus, et contenant les valeurs montrées sur la figure ci-dessus.</li>
+                    <li>Dans <code>contacts.js</code>, créez 3 objets JS avec les propriétés décrites ci-dessus, et contenant les valeurs montrées sur la figure ci-dessus.</li>
                     <li>Créez un tableau JS rassemblant ces objets.</li>
                     <li>Modifiez la fonction <code>displayContacts</code> pour qu'elle parcourt le tableau et pour chaque objet "contact", ajoute une ligne dans le tableau HTML. Pour chaque ligne, la dernière colonne contient trois boutons d'actions, inopérants pour le moment.</li>
                 </ol>
@@ -84,7 +130,7 @@ document.addEventListener("DOMContentLoaded", displayContacts);
             </section>
 
             <section>
-                <h4 id="preparation">Constructeur de contact</h4>
+                <h4 id="constructeur">Constructeur de contact</h4>
                 <p>Pour faciliter la création de nouveaux contacts:</p>
                 <ol>
                     <li>Définissez une fonction constructeur <code>Contact</code> qui prend en paramètres les informations d'un contact et initialise les propriétés de l'objet.</li>
@@ -94,11 +140,11 @@ document.addEventListener("DOMContentLoaded", displayContacts);
             </section>
 
             <section>
-                <h4 id="preparation">Filtrer les contacts</h4>
+                <h4 id="filtrer">Filtrer les contacts</h4>
                 <p>On propose maintenant d'ajouter une barre de filtre en haut de la page, comme montré sur la figure ci-dessous.</p>
                 <a href="../img/contacts-screen3.png" target="_blank"><img src="../img/contacts-screen3.png" class="w-100 m-auto mt-2 mb-4"></a>
                 <p>Cette barre est un champs de saisie qui permet à l'utilisateur de saisir du texte pour filtrer les contacts affichés dans le tableau. À chaque cacratère saisi dans la barre, le contenu du tableau HTML se met à jour pour ne laisser afficher que les contacts ciblés. Un contact est ciblé si l'une de ses propriétés contient le texte saisi. Par exemple, dans l'image ci-dessus, seuls les contacts contenant "univ-rouen" dans leur adresse mail ont été conservés dans le tableau.</p>
-                <ul>
+                <ol>
                     <li>Ajoutez la barre de saisie dans votre page HTML, au dessus du tableau de contact. Il s'agit d'un simple <code>input</code> de type texte, éventuellement inclus dans un <code>div</code> conteneur.</li>
                     <li>Dans <code>contacts.js</code>, définissez la fonction <code>filterContacts</code> qui:</li>
                     <ul>
@@ -107,16 +153,113 @@ document.addEventListener("DOMContentLoaded", displayContacts);
                         <li>parcourt le tableau des contacts et pour chacun d'eux, vérifie s'il correspond au filtre</li>
                         <li>met à jour le tableau HTML pour ajouter une ligne pour chaque contact ciblé</li>
                     </ul>
-                    <li>ajoutez un écouteur d'événement sur la barre de filtre pour appeler la fonction <code>filterContacts</code> à chaque saisie</li>
-                </ul>
+                    <li>Ajoutez un écouteur d'événement sur la barre de filtre pour appeler la fonction <code>filterContacts</code> à chaque saisie</li>
+                </ol>
             </section>
 
             <section>
-                <h4 id="preparation">Modification et suppression d'un contact</h4>
-                <p></p>
+                <h4 id="suppression">Suppression d'un contact</h4>
+                <p>L'objectif est d'implémenter la fonctionnalité de suppression d'un contact depuis le tableau affiché. Nous n'implémenterons pas les fonctionnalités d'affichage et de modification des contacts.</p>
+                <ol>
+                    <li>Pour chaque bouton "Supprimer" du tableau, ajoutez un <code>id</code> qui contient l'indice de la ligne concernée.</li>
+                    <li>Ajoutez également pour chacun d'eux, un écouteur d'événement nommé <code>deleteContact</code>.</li>
+                    <li>Définissez <code>deleteContact</code> avec l'<code>event</code> en paramètre:  Ensuite:</li>
+                    <ul>
+                        <li>À l'aide de cet <code>event</code> récupérer l'indice du contact à supprimer.</li>
+                        <li>Affichez une fenêtre de confirmation avec la fonction <code>confirm</code>.</li>
+                        <li>Si l'utilisateur confirme la suppression, supprimez le contact du tableau des contacts (utilisez la méthode <code>splice</code> des tableaux JS - <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array/splice" target="_blank">documentation</a>).</li>
+                        <li>Appelez la fonction <code>displayContacts</code> pour mettre à jour l'affichage du tableau HTML.</li>
+                    </ul>
+                </ol>
             </section>
 
         </section>
+
+        <section>
+            <h3 id="html">Dessin de formes géométriques</h3>
+
+            <section>
+                <h4 id="preparation2">Préparation</h4>
+                <p>Le but est de créer une application de dessins de formes géométriques, comme montré sur la figure ci-dessous. Ces formes géométriques seront représentées en JavaScript par des classes.</p>
+                <a href="../img/shapes-screen1.png" target="_blank"><img src="../img/shapes-screen1.png" class="w-100 m-auto mt-2 mb-4"></a>
+                <ol>
+                    <li>Créez une page <code>shapes.html</code> qui contient</li>
+                    <ul>
+                        <li>Un élément <code>div</code> vide, avec l'<code>id</code> "controlPanel".</li>
+                        <li>Un canvas HTML5 de 1000x500 pixels.</li>
+                        <li>Un liste HTML vide, avec l'<code>id</code> "shapeList".</li>
+                        <li>Une balise <code>script</code> avec l'instruction suivante:</li>
+                        <pre><code class="language-js" data-trim>
+document.addEventListener("DOMContentLoaded", initializeCanvas);
+                        </code></pre>
+                    </ul>
+                    <li>Créez un script <code>shapes.js</code> dans lequel est définie une fonction <code>initializeCanvas</code> qui affiche un message dans la console.</li>
+                    <li>Testez votre page HTML en l'ouvrant dans un navigateur et vérifiez que le message s'affiche bien dans la console.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h4 id="shape">La classe <code>Shape</code></h4>
+                <p>Les formes géométriques à dessiner dans le canvas sont soit des carrés, soit des triangles équilatéraux. Pour les représenter, vous allez créer une classe <code>Shape</code> comprenant:</p>
+                <ul>
+                    <li>un type, sous la forme d'un <code>string</code> ("Square" ou "Triangle")</li>
+                    <li>des coordonnées <code>x</code> et <code>y</code> indiquant la position de la forme (son centre)</li>
+                    <li>un entier <code>sides</code> représentant le nombre de côtés</li>
+                    <li>un entier <code>sideLength</code> représentant la longueur des côtés</li>
+                </ul>
+                <p>Commencez par créer la classe:</p>
+                <ol>
+                    <li>Déclarez la classe <code>Shape</code> avec les propriétés mentionnées ci-dessus, privées.</li>
+                    <li>Définissez un constructeur qui initialise ces propriétés à partir de paramètres.</li>
+                    <li>Définissez des méthodes d'accès publiques (<em>getters</em> et <em>setters</em>) pour chaque propriété. Les <em>setters</em> doivent valider les valeurs avant de les affecter.</li>
+                    <li>Définissez une méthode <code>perimeter</code> qui calcule et retourne le périmètre de la forme.</li>
+                    <li>Redéfinissez la méthode <code>toString</code> pour retourner une représentation textuelle de la forme. Par exemple:</li>
+                    <pre><code class="language-js" data-trim>
+const shape = new Shape("Square", 10, 20, 4, 200);
+console.log(shape.toString()); // "Square at (10,20) with 4 sides of 200. Perimeter is 800"
+                    </code></pre>
+                    <li>Définissez une méthode <code>draw</code> qui prend en paramètre le contexte du canvas et qui y dessine la forme.</li>
+                </ol>
+                <p>Ensuite, pour tester votre classe:</p>
+                <ol start="7">
+                    <li>Dans <code>shapes.html</code>, ajoutez au <code>div#controlPanel</code>:</li>
+                    <ul>
+                        <li>un bouton "Clear"</li>
+                        <li>deux champs de saisie, l'un pour saisir le nombre de côtés, l'autre pour saisir la longueur des côtés.</li>
+                    </ul>
+                    <li>Ajoutez un écouteur pour le clic sur le bouton, qui efface les dessins présents sur le canvas.</li>
+                    <li>Ajoutez un écouteur d'événements pour les clics sur le canvas qui:</li>
+                    <ul>
+                        <li>récupère la position du clic.</li>
+                        <li>récupère les valeurs des champs de saisie pour le nombre de côtés et la longueur des côtés.</li>
+                        <li>crée une instance de <code>Shape</code> avec ces valeurs.</li>
+                        <li>ajoute un item <code>li</code> à la liste <code>shapeList</code>, affichant le résultat de la méthode <code>toString()</code>.</li>
+                        <li>dessine la forme sur le canvas en invoquant la méthode <code>draw</code> de l'instance.</li>
+                    </ul>
+                </ol>
+            </section>
+
+            <section>
+                <h4 id="square-triangle">Les classes <code>Square</code> et <code>Triangle</code></h4>
+                <p>La classe <code>Shape</code> permet déjà de dessiner des carrés et des triangles, mais il est préférable de créer des classes spécifiques pour chacune de ces formes. Ces deux classes, <code>Square</code> et <code>Triangle</code>, héritent de <code>Shape</code> et redéfinissent certaines méthodes pour un comportement adapté.</p>
+                <ol>
+                    <li>Définissez la classe <code>Square</code> qui hérite de <code>Shape</code>.</li>
+                    <li>Définissez le constructeur pour que celui-ci sollicite le constructeur de la classe parente avec les paramètres appropriés. Le constructeur de <code>Square</code> n'a besoin que de la position et de la longueur des côtés.</li>
+                    <li>Définissez une méthode <code>area</code> qui calcule et retourne l'aire du carré.</li>
+                    <li>Redéfinissez la méthode <code>draw</code> pour qu'elle ne dessine que des carrés.</li>
+                    <li>Redéfinissez la méthode <code>toString</code> pour qu'elle ajoute l'aire du carré à la description textuelle.</li>
+                    <li>Faites de même pour la classe <code>Triangle</code>.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h4 id="rectangle">La classe <code>Rectangle</code></h4>
+                <p>Pour terminer, il s'agit de définir la classe <code>Rectangle</code> qui hérite de <code>Shape</code> et qui redéfinit les méthodes nécessaires pour un comportement adapté. Les côtés d'un rectangle ne sont pas tous égaux, à vous de trouver les solutions adaptés à cette spécificité.</p>
+            </section>
+
+
+        </section>
+
     </main>
 
     <footer>
