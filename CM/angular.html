@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Conception d'Interface Web</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Client</div>
+                <div class="subtitle">Angular</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Dans ce chapitre</h1>
+                <ol>
+                    <li>Les objets en JavaScript</li>
+                    <li>La programmation orientée objet</li>
+                    <li>Objets standards</li>
+                    <li>Angular</li>
+                    <li>AJAX</li>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Angular</h1>
+                <ul>
+                    <li>Framework web pour la création d'application côté client</li>
+                    <li><em>Single-Page Application (SPA)</em> : une page web unique pour toute l’application</li>
+                    <li>TypeScript : superset de JavaScript</li>
+                    <li>Node.js : environnement pour le développement et le déploiement</li>
+                    <li>Angular CLI : outil en ligne de commande pour créer et gérer les projets</li>
+                    <li>Résultat final : une application web HTML/CSS/JS qui tourne dans un navigateur</li>
+                </ul>
+                <figure class="mt-5">
+                    <img src="figures/chap4/logo_angular.png" alt="Logo Angular" class="h-3em m-3">
+                    <img src="figures/chap4/logo_typescript.png" alt="Logo Angular" class="h-3em m-3">
+                    <img src="figures/chap4/logo_nodejs.png" alt="Logo Angular" class="h-3em m-3">
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Angular</h1>
+                <h2>Historique</h2>
+                <ul>
+                    <li><span class="important">2010 : AngularJS</span> - première version par Google en JS <br>Objectif : créer des app ”client riche” en découplant le front de la logique metier</li>
+                    <li><span class="important">2012 : AngularJS v1.0.0</span> - première v1 avec syntaxe JS très complexe</li>
+                    <li><span class="important">2016 : Angular 2.0</span> - v2.0 de AngularJS mais réécrite entièrement en TS. <br>Changement de nom pour éviter les confusions</li>
+                    <li><span class="important">2017-2020 : Angular 4 à 11</span> - 2 versions par an (mai et nov.), toutes mises à jour pendant 18 mois.</li>
+                    <li><span class="important">2021 : Fin de AngularJS</span> - Google arrête le développement et le support</li>
+                    <li><span class="important">2025 : Angular 20 et 21</span></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <ul>
+                    <li>Superset de JavaScript développé par Microsoft</li>
+                    <li>Ajoute des fonctionnalités avancées à JavaScript :</li>
+                    <ul>
+                        <li>Typage statique (types explicites)</li>
+                        <li>Classes abstraites et interfaces</li>
+                        <li>Modules et espaces de noms</li>
+                        <li>Annotations</li>
+                        <li>Génériques</li>
+                    </ul>
+                    <li>Compilé (transpilé) en JavaScript standard pour être exécuté dans les navigateurs</li>
+                    <li>Améliore la maintenabilité et la robustesse du code</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Système de typage</h2>
+                <ul>
+                    <li>Les variables ont un type fixe</li>
+                    <li>Pendant la compilation en JS, les types sont vérifiés pour détecter les incompatibilités</li>
+                    <li>Possibilité de spécifier des types explicites pour les variables, fonctions, etc.</li>
+                </ul>
+                <pre class="mt-2"><code class="language-typescript" data-trim>
+let helloWorld = "Hello World";
+// ou
+let helloWorld : string = "Hello World";
+
+helloWorld = 42; // Erreur de compilation : Type 'number' is not assignable to type 'string'
+
+class User {
+    name: string;
+    id: number;
+    constructor(name: string, id: number) {
+        this.name = name;
+        this.id = id;
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Système de typage</h2>
+                <ul>
+                    <li>TS s'appuit sur le fonctionnement de JS pour déduire automatiquement les types primitifs</li>
+                    <li>Pour les objets, TS utilise un système de typage structurel (<em>duck typing</em>)</li>
+                    <li>Type déterminé par sa structure (propriétés et types) et non par un type explicite (e.g. une classe)</li>
+                    <li>2 objets sont du même type s'ils ont les mêmes propriétés, indépendamment de leur origine</li>
+                </ul>
+                <pre class="mt-2"><code class="language-typescript" data-trim>
+const obj = { width: 10, height: 15 };
+const area = obj.width * obj.heigth; 
+// Erreur de compilation: Property 'heigth' does not exist on type '{ width: number; height: number; }'. 
+//  Did you mean 'height'?
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Système de typage</h2>
+                <ul>
+                    <li>Pour définir un type d'objets de façon explicite: interfaces</li>
+                    <li>Une interface définit un contrat que les objets doivent respecter</li>
+                </ul>
+                <pre class="mt-2"><code class="language-typescript" data-trim>
+interface User {
+    name: string;
+    id: number;
+}
+const user1: User = { name: "Alice", id: 1 };
+const user2: User = { name: "Bob" };    // Erreur de compilation: Property 'id' is missing in 
+                                        //type '{ name: string; }' but required in type 'User'.
+
+class UserAccount {
+    name: string;
+    id: number;
+    constructor(name: string, id: number) {
+        this.name = name;
+        this.id = id;
+    }
+}
+const user: User = new UserAccount("Murphy", 1); // ok
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Projet Warehouse</h1>
+                
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
