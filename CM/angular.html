@@ -34,6 +34,15 @@
                     <li>La programmation orientée objet</li>
                     <li>Objets standards</li>
                     <li>Angular</li>
+                    <ul>
+                        <li>TypeScript</li>
+                        <li>Environnement Angular</li>
+                        <li>Composants et modules</li>
+                        <li>Liaisons de données</li>
+                        <li>Services et injection de dépendances</li>
+                        <li>Directives</li>
+                        <li>Navigation</li>
+                    </ul>
                     <li>AJAX</li>
                 </ol>
             </section>
@@ -66,6 +75,7 @@
                     <li><span class="important">2016 : Angular 2.0</span> - v2.0 de AngularJS mais réécrite entièrement en TS. <br>Changement de nom pour éviter les confusions</li>
                     <li><span class="important">2017-2020 : Angular 4 à 11</span> - 2 versions par an (mai et nov.), toutes mises à jour pendant 18 mois.</li>
                     <li><span class="important">2021 : Fin de AngularJS</span> - Google arrête le développement et le support</li>
+                    <li><span class="important">2023 : Angular 17 introduit de nombreuses nouveautés pour simplifier le dev (control flow, signals, etc.)</span></li>
                     <li><span class="important">2025 : Angular 20 et 21</span></li>
                 </ul>
             </section>
@@ -120,9 +130,34 @@ class User {
                 <h1>TypeScript</h1>
                 <h2>Système de typage</h2>
                 <ul>
-                    <li>TS s'appuit sur le fonctionnement de JS pour déduire automatiquement les types primitifs</li>
+                    <li>Si le type n'est pas spécifié, TS le déduit à l'initialisation</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+let count = 10;
+console.log(typeof count); // "number"
+count = "ten"; // Erreur de compilation : Type 'string' is not assignable to type 'number'
+                    </code></pre>
+                    <li>Sans initialisation, le type est <code>any</code></li>
+                    <li>Le type <code>any</code> désactive la vérification de type</li>
+                    <pre><code class="language-typescript" data-trim>
+let data: any;
+data = 42;               // ok
+data = "Hello World";    // ok
+data = { name: "Alice" } // ok
+
+let obj: any = { width: 10, height: 15 };
+const area = obj.width * obj.heigth; // ok à la compilation
+console.log(area);  // NaN car 'heigth' est undefined
+                    </code></pre>
+                    <li>TS propose aussi le type <code>unknown</code> qui est le type "sûr" pour les valeurs inconnues</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Système de typage</h2>
+                <ul>
                     <li>Pour les objets, TS utilise un système de typage structurel (<em>duck typing</em>)</li>
-                    <li>Type déterminé par sa structure (propriétés et types) et non par un type explicite (e.g. une classe)</li>
                     <li>2 objets sont du même type s'ils ont les mêmes propriétés, indépendamment de leur origine</li>
                 </ul>
                 <pre class="mt-2"><code class="language-typescript" data-trim>
@@ -130,6 +165,16 @@ const obj = { width: 10, height: 15 };
 const area = obj.width * obj.heigth; 
 // Erreur de compilation: Property 'heigth' does not exist on type '{ width: number; height: number; }'. 
 //  Did you mean 'height'?
+
+class Person {
+    name: string;
+    constructor(name: string) { this.name = name; }
+}
+class User {
+    name: String;
+    constructor(name: string) { this.name = name; }
+}
+let user: User = new Person("John"); // ok: les 2 classes ont la même structure
                 </code></pre>
             </section>
 
@@ -164,10 +209,965 @@ const user: User = new UserAccount("Murphy", 1); // ok
 
             <!--------------------------------------------->
             <section>
-                <h1>Projet Warehouse</h1>
-                
+                <h1>TypeScript</h1>
+                <h2>Types Union</h2>
+                <ul>
+                    <li>TS autorise aussi la réunion de plusieurs types pour une même variable</li>
+                    <li>Cette variable peut recevoir des valeurs de chacun des types concernés</li>
+                    <li>La vérification du type est faite en contexte (e.g. ci-dessous, TS tiens compte du <code>if</code> dans <code>printId</code>)</li>
+                </ul>
+                <pre class="mt-2"><code class="language-typescript" data-trim>
+let value: string | number;
+value = "Hello"; // ok
+value = 42;      // ok
+value = true;    // Erreur de compilation: Type 'boolean' is not assignable to type 'string | number'.
+
+function printId(id: number | string) {
+    if (typeof id === "string") {
+        console.log(id.toUpperCase());      // ne fonctionne pas sans le "if" car id peut être un number
+    } else {
+        console.log(id);
+    }
+}
+                </code></pre>
             </section>
 
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Les classes</h2>
+                <ul>
+                    <li>TS est également plus strict sur la définition des classes</li>
+                    <li>Les propriétés doivent être initialisées (sinon erreur)</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+class User {
+    name: string;
+    constructor(name: string) { this.name = name; }
+}
+// ou 
+class User {
+    name: string = "Default Name";
+}
+                    </code></pre>
+                    <li>Opérateur <code>!</code> : indique que la propriété sera initialisée plus tard</li>
+                    <pre><code class="language-typescript" data-trim>
+class User {
+    name!: string;
+    setName(name: string) { this.name = name; }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Les classes</h2>
+                <ul>
+                    <li>Mots-clés <code>public</code>, <code>private</code>, <code>protected</code></li>
+                    <pre><code class="language-typescript" data-trim>
+class MaClasseDeBase {
+    private _firstname;
+    private _lastname;
+    public constructor(firstname: string, lastname: string) {
+        this._firstname = firstname;
+        this._lastname = lastname;
+    }
+    protected direBonjour(): string {
+        return "Bonjour " + this._firstname + "," + this._lastname;
+    }
+}
+
+class MaClasse extends MaClasseDeBase {
+    public constructor(firstname: string, lastname: string) {
+        super(firstname, lastname);
+    }
+}
+let monInstance: MaClasseDeBase = new MaClasse("Jean","Dupond");
+monInstance.direBonjour(); // Erreur : 
+    // Property 'direBonjour' is protected and only accessible within class 'MaClasseDeBase' and its subclasses.
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Modules</h2>
+                <ul>
+                    <li>En JS, les fichiers d'extension <code>.js</code> sont des scripts, i.e. exécutés dans le contexte global</li>
+                    <li>Plusieurs scripts dans une même page HTML partagent les mêmes variables et fonctions globales</li>
+                    <pre><code class="language-html" data-trim>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="script1.js"&gt;&lt;/script&gt; <!-- définit une fonction 'foo' -->
+    &lt;script src="script2.js"&gt;&lt;/script&gt; <!-- utilise 'foo' -->
+  &lt;/head&gt;
+  &lt;body&gt;...&lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    <li>Un module est un fichier qui définit son propre contexte, i.e. ses variables et fonctions ne sont pas dans le contexte global</li>
+                    <li>Un module est un fichier <code>.js</code> ou <code>.ts</code> qui utilise les mots-clés <code>import</code> et <code>export</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Modules</h2>
+                <ul>
+                    <li>Les modules existent en JS depuis 2015 et sont pris en charge par tous les navigateurs depuis 2020</li>
+                    <li>Les modules existent en TS depuis plus longtemps mais fonctionnent maintenant de la même manière</li>
+                    <pre class="mb-1"><code class="language-typescript" data-trim>
+// -- shape.ts --
+export interface Shape {
+    area(): number;
+}
+                    </code></pre>
+                    <pre class="mb-1"><code class="language-typescript" data-trim>
+// -- circle.ts --
+import { Shape } from "./shape";
+export class Circle implements Shape {
+    radius: number;
+    constructor(radius: number) { this.radius = radius; }
+    area(): number { return Math.PI * this.radius * this.radius; }
+}
+                    </code></pre>
+                    <pre class="mb-1"><code class="language-typescript" data-trim>
+// -- main.ts --
+import { Circle } from "./circle";
+let myCircle = new Circle(10);
+console.log("Area: " + myCircle.area());
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>TypeScript</h1>
+                <h2>Documentation</h2>
+                <iframe data-src="https://www.typescriptlang.org/play/" class="w-100 framed" style="height:90%;zoom: 0.60;"></iframe>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Première application Angular</h1>
+                <ul>
+                    <li>Angular est un framework pour créer des applications web côté client</li>
+                    <li>Une application Angular ne s'exécute pas directement dans le navigateur</li>
+                    <li>Elle doit être "construite" (<em>build</em>) et traduite en JS, avant de pouvoir être exécutée</li>
+                    <li class="important">Nécessite un environnement de développement spécifique:</li>
+                    <ul>
+                        <li><code>Node.js</code> : environnement d'exécution JS. Pour Angular, fournit des outils de développement.</li>
+                        <li><code>NPM</code> : gestionnaire de paquets pour Node.js. Pour Angular, gestionnaires de dépendances.</li>
+                        <li><code>Angular CLI</code> : outil en ligne de commande pour créer et gérer les projets Angular</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Première application Angular</h1>
+                <ol>
+                    <li>Installer Node.js et NPM (<a href="https://nodejs.org/en/download" target="_blank">instructions</a>)</li>
+                    <li>Installer Angular CLI via NPM :</li>
+                    <pre><code class="language-bash" data-trim>
+> npm install -g @angular/cli
+                    </code></pre>
+                    <li>Créer un nouveau projet Angular avec Angular CLI :</li>
+                    <pre><code class="language-bash" data-trim>
+> ng new mon-projet
+                    </code></pre>
+                    <li>Tester l'application :</li>
+                    <pre><code class="language-bash" data-trim>
+> cd mon-projet
+> ng serve
+                    </code></pre>
+                    Puis ouvrir votre navigateur à l'adresse <code>http://localhost:4200/</code>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Première application Angular</h1>
+                <ul>
+                    <li>La commande <code>serve</code> permet de lancer le serveur de développement Angular</li>
+                    <li>Pour le déploiement:</li>
+                    <pre><code class="language-bash" data-trim>
+> ng build
+                    </code></pre>
+                    <li>Cette commande génère un dossier <code>dist</code> contenant les fichiers de l'application Angular prêts à être déployés</li>
+                    <li>Pour ajouter des librairies de composants:</li>
+                    <pre><code class="language-bash" data-trim>
+> ng add @angular/material
+                    </code></pre>
+                    <li>Par exemple, cette commande permet d'utiliser les composants <a href="https://material.angular.io/">Material</a> d'Angular</li>
+                </ul>    
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Première application Angular</h1>
+                <h2>Démonstration: le projet Warehouse</h2>
+                <img src="figures/chap4/warehouse-screen1.png" class="w-70 m-auto mt-2">
+                <!--<ol>
+                    <li>Créer un projet Angular avec Angular CLI</li>
+                    <li>Ajouter une librairie de composants (e.g. Angular Material)</li>
+                    <li>Modifier <code>app.html</code> et <code>app.css</code> pour afficher le contenu de l'application</li>
+                </ol>-->
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>Une application Angular est constitué de composants</li>
+                    <li>Chaque composant définit une partie de l'interface utilisateur et son comportement</li>
+                </ul>
+                <img src="figures/chap4/composants-angular.png" class="w-70 m-auto mt-3">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>Un composant Angular est défini par une classe TS avec un décorateur <code>@Component</code></li>
+                    <pre class="mb-2"><code class="language-typescript compact" data-trim>
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-stock',
+    template: `
+        <div class="stock-container">
+            <h1>Liste des produits en stock:</h1>
+            <p>Les produits seront affichés ici.</p>
+        </div>
+    `, 
+    style: `
+        h1 { color: blue; }
+    `
+})
+export class Stock {
+    // Le code de cette classe définit le comportement du composant
+}
+                    </code></pre>
+                    <li>Le décorateur <code>@Component</code> définit les métadonnées du composant :</li>
+                    <ul>
+                        <li><code>selector</code> : nom de la balise HTML pour utiliser le composant</li>
+                        <li><code>template</code> : code HTML du composant</li>
+                        <li><code>style</code> : styles CSS spécifiques au composant</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>Ce composant est invoqué dans une page HTML avec :</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;app-stock&gt;&lt;/app-stock&gt;
+                    </code></pre>
+                    <li>À l’exécution, l’élement HTML résultant sera :</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;div class="stock-container"&gt;
+    &lt;h1&gt;Liste des produits en stock:&lt;/h1&gt;
+    &lt;p&gt;Les produits seront affichés ici.&lt;/p&gt;
+&lt;/div&gt;
+                    </code></pre>
+                    <li>Le code de la classe TS définit le comportement du composant (gestion des événements, etc.)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>À sa création avec la commande <code>ng new</code>, un projet comprend:</li>
+                    <ul>
+                        <li>Un composant racine nommé <code>app</code></li>
+                        <li>Un fichier <code>main.ts</code> qui est le point d’entrée de l’application</li>
+                        <li>Un fichier <code>index.html</code>, la page HTML qui héberge l'interface</li>
+                        <li>Un fichier <code>styles.css</code> pour les styles globaux</li>
+                    </ul>
+                    <li><code>index.html</code> comprend une balise <code>&lt;app-root&gt;</code>, correspondant au composant racine</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        ...
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;app-root&gt;&lt;/app-root&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>Chaque composant est typiquement défini par 3 fichiers:</li>
+                    <ul>
+                        <li><code>nom-composant.ts</code> : code TypeScript du composant</li>
+                        <li><code>nom-composant.html</code> : template HTML du composant</li>
+                        <li><code>nom-composant.css</code> : styles CSS spécifiques au composant</li>
+                    </ul>
+                    <li>Dans ce cas, le décorateur de la classe TS devient:</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+@Component({
+    selector: "app-stock",
+    templateUrl: './stock.html',
+    styleUrl: './stock.css',
+})
+export class Stock { ... }
+                    </code></pre>
+                    <li>Note: dans les anciennes versions d'Angular, les fichiers portaient l'extension <code>.component.ts</code>, <code>.component.html</code> et <code>.component.css</code>.</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <ul>
+                    <li>Pour créer un nouveau composant:</li>
+                    <pre class="mb-2"><code class="language-bash" data-trim>
+> ng generate component component-path/component-name
+                    </code></pre>
+                    <li>Cette commande crée les 3 fichiers du composant</li>
+                    <li><code>component-path</code> est le chemin où sera créé le composant, dans <code>src/app</code></li>
+                    <li><code>component-name</code> est le nom qui servira à nommer la classe TS et les fichiers correspondant</li>
+                    <li>Pour intégrer ce composant à l'interface, il faut:</li>
+                    <ol>
+                        <li>Inclure sa balise dans le template HTML du composant racine ou d'un autre composant</li>
+                        <li>Importer le module du composant dans la classe TS du composant qui l'inclut</li>
+                    </ol>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Composants</h1>
+                <h2>Démonstration: création de composants</h2>
+                <img src="figures/chap4/warehouse-screen2.png" class="w-70 m-auto mt-2">
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <ul>
+                    <li>Le template d'un composant définit son rendu dans la page</li>
+                    <li>HTML "augmenté", c’est-à-dire avec des éléments de syntaxe dynamique</li>
+                    <li>Par exemple :</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;!-- fichier hello.html --&gt;
+&lt;h1&gt;Hello {{name}}&lt;/h1&gt;
+&lt;button (click)="changeName()"&gt;Change Name&lt;/button&gt;
+                    </code></pre>
+                    <li><code>{{name}}</code> et <code>changeName()</code> sont des variables et méthodes de la classe TS du composant:</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+@Component({
+    selector: "hello",
+    templateUrl: './hello.html',
+    styleUrl: './hello.css',
+})
+export class Hello { 
+    name: string = "World";
+    changeName(): void {
+        this.name = "Angular";
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <ul>
+                    <li>Les éléments dynamiques du template (e.g. <code>{{name}}</code>, <code>(click)</code>) établissent des liens d’intéraction entre le composant et son template : <span class="important">liaison de données ou <em>data binding</em></span></li>
+                    <li>Il y a 4 types de liaison de données :</li>
+                </ul>
+                <div class="row mt-4">
+                    <div class="col-60">
+                        <ol>
+                            <li><em>interpolation</em> : <code>{{variable}}</code> (TS vers HTML)</li>
+                            <li><em>property binding</em> : <code>[property]="value"</code> (TS vers HTML)</li>
+                            <li><em>event binding</em> : <code>(event)="handler()"</code> (HTML vers TS)</li>
+                            <li><em>two-way binding</em> : <code>[(ngModel)]="value"</code> (bidirectionnel)</li>
+                        </ol>
+                    </div>
+                    <div class="col-40">
+                        <img src="figures/chap4/databinding.png" class="w-100 m-auto">
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <h2><em>Interpolation</em></h2>
+                <ul>
+                    <li>Composant <code>product</code> dans le projet <code>Warehouse</code></li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class Product {
+    product: ProductInfo = {
+        name: "Cahier",
+        quantity: 3
+    }
+    ...
+}
+                    </code></pre>
+                    <li><code>ProductInfo</code> est une interface à définir dans le projet (e.g. <code>ng generate interface data/product</code>)</li>
+                    <li>Dans le template:</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;h2&gt;{{product.name}}&lt;/h2&gt;
+&lt;p&gt;Quantity: {{product.quantity}}&lt;/p&gt;
+                    </code></pre>
+                    <li>À l’exécution, les éléments <code>{{product.name}}</code> et <code>{{product.quantity}}</code> sont remplacés par les valeurs correspondantes de l’objet <code>product</code> du composant</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <h2><em>Event binding</em></h2>
+                <ul>
+                    <li>Des méthodes du composants peuvent être utilisées comme gestionnaires d'événements</li>
+                    <li>Exemple: dans le composant <code>Product</code>, méthodes pour gérer la quantité du produit:</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class ProductComponent { 
+    ...
+    onRemove(): void {
+        if (this.product.quantity > 0) {
+            this.product.quantity--;
+        }
+    }
+}
+                    </code></pre>
+                    <li>La méthode est ensuite appelée dans le template avec la syntaxe <code>(click)</code></li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;button (click)="onRemove()"&gt;Remove&lt;/button&gt;
+                    </code></pre>
+                    <li>Accès possible à l'objet <code>event</code> dans le gestionnaire (cf. <a href="https://angular.dev/guide/templates/event-listeners" target="_blank">documentation</a>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <h2><em>Property binding</em></h2>
+                <ul>
+                    <li>Pour définir la valeur d'un attribut de balise à partir d'une propriété de composant</li>
+                    <li>Exemple: bouton "remove" désactivé si le produit n'est plus disponible</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;button (click)="onRemove()" [disabled]="product.quantity === 0"&gt;Remove&lt;/button&gt;
+                    </code></pre>
+                    <li>Très utilisé avec <code>class</code> et <code>style</code> (cf. <a href="https://angular.dev/guide/templates/binding#css-class-and-style-property-bindings" target="_blank">documentation</a>)</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;h2 [class.soldout]="product.quantity&lt;=0"&gt;{{ product.name }}&lt;/h2&gt;
+                    </code></pre>
+                    ou
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;h2 [class]="setTitleClasses()"&gt;{{ product.name }}&lt;/h2&gt;
+                    </code></pre>
+                    <li><code>setTitleClasses()</code> retourne une chaîne de caractères contenant les classes CSS à appliquer</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <h2><em>Two-way binding</em></h2>
+                <ul>
+                    <li>Combinaison de <em>property binding</em> et <em>event binding</em></li>
+                    <li>Liaison bidirectionnelle (lecture/écriture)</li>
+                    <li>Exemple: la quantité d'un produit est modifiable via un <code>&lt;input&gt;</code></li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;label for="quantity-input"&gt;Quantity:&lt;/label&gt;
+&lt;input type="number" [(ngModel)]="product.quantity" id="quantity-input"&gt;
+                    </code></pre>
+                    <li>Lorsque le champ HTML est édité, la valeur de <code>product.quantity</code> est mise à jour automatiquement</li>
+                    <li>Lorsque <code>product.quantity</code> est modifié, le champ HTML est mis à jour automatiquement</li>
+                    <li>Note: l'utilisation de <code>[(ngModel)]</code> nécessite d'importer le module <code>FormsModule</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liaison de données</h1>
+                <h2>Démonstration : composant <code>Product</code></h2>
+                <img src="figures/chap4/warehouse-screen3.png" class="w-70 m-auto mt-2">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <ul>
+                    <li>Un service Angular est une classe TS qui n'est pas lié à un <em>template</em></li>
+                    <li>Sert à exposer des fonctionnalités réutilisables à plusieurs autres composants ou services</li>
+                    <li>Typiquement:</li>
+                    <ul>
+                        <li>Un composant sert d'intermédiaire entre la vue et la logique d'application</li>
+                        <li>Un service fournit une fonctionnalité précise qui n'implique ni la vue, ni la logique d'application</li>
+                    </ul>
+                    <li>On peut générer un service avec:</li>
+                    <pre class="mb-2"><code class="language-bash" data-trim>
+> ng generate service service-path/service-name
+                    </code></pre>
+                    <li>Les services sont rendus accessibles via l'injection de dépendance</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <ul>
+                    <li>Exemple: un service <code>StockService</code> qui fournit une liste de produit en stock</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+import { ProductInfo } from '../data/product';
+
+export class StockService {
+    private _products: ProductInfo[] = [
+        {name : "Cahiers", quantity : 3},
+        {name : "Gommes", quantity : 7},
+        {name : "Feutres", quantity : 0}
+    ];
+
+    public get products(): ReadonlyArray&lt;ProductInfo&gt; {
+        return this._products;
+    }
+}
+                    </code></pre>
+                    <li><code>_products</code> est privé mais accessible en lecture via le getter <code>products</code></li>
+                    <li><code>ReadonlyArray</code> est un type TypeScript qui garantit que l'array ne peut pas être modifié</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <h2>Injection de dépendances</h2>
+                <ul>
+                    <li>Pour qu'un service soit utilisable dans un composant, ce dernier doit disposer d'un objet de ce service</li>
+                    <li class="important">Nous (développeurs) ne créons pas nous même les composants et les services</li>
+                    <li>Angular se charge de créer l'objet et de le fournir au composant: <span class="important">Injection de dépendances</span></li>
+                    <li>Il faut déclarer le service comme étant "injectable":</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+import { Injectable } from "@angular/core";
+
+@Injectable({
+    providedIn: "root"
+})
+export class StockService { ... }
+                    </code></pre>
+                    <li><code>providedIn: "root"</code> indique à Angular qu'il doit:</li>
+                    <ul>
+                        <li>Créer une seule instance de ce service (<em>singleton</em>)</li>
+                        <li>Rendre cette instance accessible à tous les composants de l'application</li>
+                    </ul>
+                    <li>Suffisant pour la plupart des cas, mais possible de restreindre l'accés d'un service (cf. <a href="https://angular.dev/guide/di/defining-dependency-providers" target="_blank">documentation</a>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <h2>Injection de dépendances</h2>
+                <ul>
+                    <li>Il faut ensuite "injecter" le service dans le composant:</li>
+                    <li>Exemple: création d'un composant pour afficher les produits en stock</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+import { inject } from "@angular/core";
+import { Product } from '../../data/product';
+import { StockService } from "../../services/stock-service";
+
+export class Stock {
+    products: ReadonlyArray&lt;Product&gt; = [];
+    private stockService: StockService = inject(StockService);
+
+    ngOnInit(): void {
+        this.products = this.stockService.products;
+    }
+}
+                    </code></pre>
+                    <li>Nous ne contrôlons pas le cycle de vie: l'initialisation se fait via <code>ngOnInit</code> et non le constructeur (cf. <a href="https://angular.dev/guide/components/lifecycle" target="_blank">documentation</a>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <h2>Injection de dépendances</h2>
+                <ul>
+                    <li><code>inject</code> peut être utilisé pour initialiser les propriétés ou dans le constructeur</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class Stock {
+    products: ReadonlyArray&lt;Product&gt; = [];
+    private stockService: StockService;
+    constructor() { 
+        this.stockService = inject(StockService);
+        this.products = this.stockService.products;
+    }
+}
+                    </code></pre>
+                    <li>Note: dans les anciennes version d'Angular, l'injection se faisait via le constructeur (<em>deprecated</em>):</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class Stock {
+    products: ReadonlyArray&lt;Product&gt; = [];
+    constructor(private stockService: StockService) {
+        this.products = this.stockService.products;
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <h2>Démonstration : liste de produits</h2>
+                <ul>
+                    <li><code>Stock</code> utilise <code>Product</code> pour afficher chaque produit</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;h1&gt;Liste des produits en stock:&lt;/h1&gt;
+&lt;div class="product-list"&gt;
+  &lt;app-product [product]="products[0]"&gt;&lt;/app-product&gt;
+  &lt;app-product [product]="products[1]"&gt;&lt;/app-product&gt;
+  &lt;app-product [product]="products[2]"&gt;&lt;/app-product&gt;
+&lt;/div&gt;
+                    </code></pre>
+                    <li>Chaque <code>app-product</code> est liée à un produit de la liste <code>products</code></li>
+                    <li>Il faut définir <code>product</code> comme étant initialisé par le composant parent:</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class Product {
+    &commat;Input({ required: true })
+    product!: ProductInfo;
+    ...
+}
+                    </code></pre>
+                    <li><code>product</code> est un <em>input</em> obligatoire, initialisé à <code>undefined</code> si non fourni par le composant parent</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services</h1>
+                <h2>Démonstration : liste de produits</h2>
+                <img src="figures/chap4/warehouse-screen4.png" class="w-70 m-auto mt-2">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Contrôle de flux</h1>
+                <ul>
+                    <li>Les templates peuvent contenir des blocs de contrôle de type boucle, conditionnel, etc.</li>
+                    <ul>
+                        <li><code>&commat;if.. &commat;else if.. &commat;else</code>: bloc conditionnel</li>
+                        <li><code>&commat;for</code>: boucle sur une collection</li>
+                        <li><code>&commat;switch</code>: bloc de sélection multiple</li>
+                    </ul>
+                    <li>Exemple: on parcours la liste des produits avec <code>&commat;for</code></li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;div class="product-list"&gt;
+    @for (product of products; track product.name) {
+        &lt;app-product [product]="product"&gt;&lt;/app-product&gt;
+    }
+&lt;/div&gt;
+                    </code></pre>
+                    <li><code>track product.name</code> permet d'optimiser le rendu en utilisant le nom comme identifiant unique</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Contrôle de flux</h1>
+                <ul>
+                    <li>Dans <code>Product</code>, ne pas initialiser <code>product</code> est une mauvaise pratique</li>
+                    <li>Il est préférable de l'initialiser à <code>undefined</code>:</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class Product {
+    &commat;Input({ required: true })
+    product: ProductInfo | undefined = undefined;
+    ...
+}
+                    </code></pre>
+                    <li>Dans ce cas, le template doit vérifier que <code>product</code> est défini avant de l'utiliser :</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;div *ngIf="product"&gt;
+    @if (product === undefined) {
+        &lt;p&gt;Produit non disponible&lt;/p&gt;
+    } @else {
+        &lt;h2&gt;{{ product.name }}&lt;/h2&gt;
+        &lt;p&gt;{{ product.description }}&lt;/p&gt;
+    }
+&lt;/div&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Contrôle de flux</h1>
+                <h2>Démonstration : liste de produits</h2>
+                <img src="figures/chap4/warehouse-screen5.png" class="w-70 m-auto mt-2">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <ul>
+                    <li>Une application Angular est une <em>Single-Page Application</em></li>
+                    <li>La navigation ne se fait pas en allant de pages en pages mais en modifiant le contenu d’une page unique</li>
+                    <li>Problème : l’URL est unique ce qui empêche la gestion de l’historique de navigation</li>
+                    <li>Solution : le Router d’Angular</li>
+                    <li>Permet de définir des associations URL-composant</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <ul>
+                    <li>Dans le projet <code>warehouse</code>, on veut pouvoir afficher le détail d’un produit</li>
+                    <li>On veut utiliser des URL distincts pour le stock et le détail d’un produit</li>
+                </ul>
+                <div class="row mt-3">
+                    <div class="col-50">
+                        <img src="figures/chap4/warehouse-screen6.png" class="w-100 m-auto">
+                    </div>
+                    <div class="col-50">
+                        <img src="figures/chap4/warehouse-screen7.png" class="w-100 m-auto">
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <ul>
+                    <li>Les associations URL-composant sont appelées des routes</li>
+                    <li>Quand l'application est créée avec Angular CLI, le routage est activé par défaut</li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+/* Dans app.routes.ts */
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [];
+                    </code></pre>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+/* Dans app.config.ts */
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+    providers: [provideRouter(routes)]
+};
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Définir les routes</h2>
+                <ol>
+                    <li>Définir les routes dans le fichier <code>app.routes.ts</code></li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+import { Routes } from '@angular/router';
+import { Stock } from './components/stock/stock';
+import { ProductDetail } from './components/product-detail/product-detail';
+
+export const routes: Routes = [
+	{ path: 'stock', component: Stock},
+	{ path: 'details', component: ProductDetail},
+	{ path: '', redirectTo: 'stock', pathMatch: 'full'}
+];
+                    </code></pre>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Définir les routes</h2>
+                <ol start="2">
+                    <li>Ajouter les routes à l’application, en integrant la balise <code>&lt;router-outlet&gt;</code> dans <code>app.html</code></li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+<!-- Remplacer <app-stock> par <router-outler> -->
+&lt;main class="container"&gt;
+    &lt;router-outlet&gt;&lt;/router-outlet&gt;
+&lt;/main&gt;
+                    </code></pre>
+                    <code>router-outlet</code> est remplacé dynamiquement par le composant correspondant à l'URL
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Définir les routes</h2>
+                <ol start="3">
+                    <li>Implanter la navigation, par exemple dans un menu de navigation :</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;mat-toolbar&gt;
+  &lt;mat-icon&gt;home&lt;/mat-icon&gt;
+  &lt;a matButton routerLink="/stock" class="brand"&gt;{{ title() }}&lt;/a&gt;
+&lt;/mat-toolbar&gt;
+                    </code></pre>
+                    Il faut importer <code>RouterLink</code> dans la classe TS du composant:
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+import { RouterLink } from '@angular/router';
+...
+@Component({
+    ...
+    imports: [RouterLink]
+})
+export class App { ... }
+                    </code></pre>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Exemple du bouton "Details"</h2>
+                <ul>
+                    <li>Alternative: utiliser un gestionnaire d'événements:</li>
+                    <pre class="mb-2"><code class="language-html" data-trim>
+&lt;button (click)="showDetails()"&gt;Details&lt;/button&gt;
+                    </code></pre>
+                    <li>Le gestionnaire <code>showDetails()</code> déclenche la navigation vers la route <code>/details</code></li>
+                    <pre class="mb-2"><code class="language-typescript" data-trim>
+export class App {
+    private router: Router = inject(Router);
+    showDetails() {
+        this.router.navigate(['/details']);
+    }
+}
+                    </code></pre>
+                    <li>Problème: il faut transmettre un paramètre d'URL indiquant le produit à afficher</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Exemple du bouton "Details"</h2>
+                <ul>
+                    <li>Première option: paramètre de route obligatoire</li>
+                    <ul>
+                        <li>URL de type <code>/details/Cahiers</code></li>
+                        <li>Route:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+{ path: 'details/:name', component: ProductDetail},
+                        </code></pre>
+                        <li>Le paramètre <code>name</code> accessible via l'injection de <code>ActivatedRoute</code>:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+export class ProductDetail {
+    private route: ActivatedRoute = inject(ActivatedRoute);
+    ngOnInit(): void {
+        const name = this.route.snapshot.paramMap.get('name');
+        ...
+    }
+}
+                        </code></pre>
+                        <li>Navigation:</li>
+                        <pre class="mb-2"><code class="language-html" data-trim>
+&lt;a [routerLink]="['/details', product.name]"&gt;Details&lt;/a&gt;
+                        </code></pre>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+this.router.navigate(['/details', 'Cahiers']);
+                        </code></pre>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Exemple du bouton "Details"</h2>
+                <ul>
+                    <li>Deuxième option: paramètre de route facultatif</li>
+                    <ul>
+                        <li>URL de type <code>/details;name=Cahiers</code></li>
+                        <li>Route:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+{ path: 'details', component: ProductDetail},
+                        </code></pre>
+                        <li>Le paramètre <code>name</code> accessible via l'injection de <code>ActivatedRoute</code>:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+export class ProductDetail {
+    private route: ActivatedRoute = inject(ActivatedRoute);
+    ngOnInit(): void {
+        const name = this.route.snapshot.paramMap.get('name');
+        ...
+    }
+}
+                        </code></pre>
+                        <li>Navigation:</li>
+                        <pre class="mb-2"><code class="language-html" data-trim>
+&lt;a [routerLink]="['/details', {name: product.name}]"&gt;Details&lt;/a&gt;
+                        </code></pre>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+this.router.navigate(['/details', {name: 'Cahiers'}]);
+                        </code></pre>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Exemple du bouton "Details"</h2>
+                <ul>
+                    <li>Troisième option: paramètre d'URL</li>
+                    <ul>
+                        <li>URL de type <code>/details?name=Cahiers</code></li>
+                        <li>Route:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+{ path: 'details', component: ProductDetail},
+                        </code></pre>
+                        <li>Le paramètre <code>name</code> accessible via l'injection de <code>ActivatedRoute</code>:</li>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+export class ProductDetail {
+    private route: ActivatedRoute = inject(ActivatedRoute);
+    ngOnInit(): void {
+        const name = this.route.snapshot.queryParamMap.get('name');
+        ...
+    }
+}
+                        </code></pre>
+                        <li>Navigation:</li>
+                        <pre class="mb-2"><code class="language-html" data-trim>
+&lt;a [routerLink]="['/details']" [queryParams]="{name: product.name}"&gt;Details&lt;/a&gt;
+                        </code></pre>
+                        <pre class="mb-2"><code class="language-typescript" data-trim>
+this.router.navigate(['/details', {queryParams: {name: 'Cahiers'}}]);
+                        </code></pre>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation (<em>Routing</em>)</h1>
+                <h2>Démonstration : détail d'un produit</h2>
+                <img src="figures/chap4/warehouse-screen7.png" class="w-70 m-auto mt-2">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Quelques liens pour approfondir...</h1>
+                <ul>
+                    <li><a href="https://www.typescriptlang.org/" target="_blank">typescriptlang.org</a> : Site officiel de TypeScript</li>
+                    <li><a href="https://angular.dev/overview" target="_blank">angular.dev</a>: Documentation officielle d'Angular</li>
+                    <li><a href="https://angular.dev/playground" target="_blank">Angular playground</a></li>
+                    <li><a href="https://angular.dev/tutorials" target="_blank">Tutoriaux Angular</a></li>
+                    <li><a href="https://angular.fr/get_started/" target="_blank">angular.fr</a>: Documentation en français très détaillée</li>
+                </ul>
+            </section>
         </div>
     </div>
 
