@@ -79,6 +79,32 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#angular-collapse" aria-expanded="false">
+                        Gestion de contact avec Angular
+                    </button>
+                    <div class="collapse" id="angular-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#ng-preparation" class="d-inline-flex align-items-center rounded">Préparation</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="angular-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#ng-premier" class="d-inline-flex align-items-center rounded">Premier contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="angular-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#ng-liste" class="d-inline-flex align-items-center rounded">Liste de contacts</a></li>
+                        </ul>
+                    </div>
+                    <div class="collapse" id="angular-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#ng-fonctionnalites" class="d-inline-flex align-items-center rounded">Fonctionnalités</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -257,7 +283,50 @@ console.log(shape.toString()); // "Square at (10,20) with 4 sides of 200. Perime
                 <h4 id="rectangle">La classe <code>Rectangle</code></h4>
                 <p>Pour terminer, il s'agit de définir la classe <code>Rectangle</code> qui hérite de <code>Shape</code> et qui redéfinit les méthodes nécessaires pour un comportement adapté. Les côtés d'un rectangle ne sont pas tous égaux, à vous de trouver les solutions adaptés à cette spécificité.</p>
             </section>
+        </section>
 
+        <section>
+            <h3 id="angular">Gestion de contacts en Angular</h3>
+
+            <section>
+                <h4 id="ng-preparation">Préparation</h4>
+                <p>Le but est de créer une application Angular pour la gestion d'un répertoire de contacts, similaire à celle montrée dans la figure ci-dessous.</p>
+                <a href="../img/phonebook-screen1.png" target="_blank"><img src="../img/phonebook-screen1.png" class="w-100 m-auto mt-2 mb-4"></a>
+                <p>Les outils nécessaires au développement avec Angular sont déjà installés en salle de TP. Si vous souhaitez utiliser votre propre ordinateur, vous devez configurer votre environnement de travail comme expliqué ici : <a href="https://angular.dev/installation" target="_blank">https://angular.dev/installation</a>. Nous proposons également d’utiliser la librairie <a href="https://material.angular.io/" target="_blank">Material</a>. Cette librairie fournit des composants d’interfaces pré-conçus (boutons, barre de navigations, etc.). Pour utiliser Material, il faut ajouter le package correspondant à votre projet. Pour cela, dans le terminal, placez vous dans le dossier d’un projet Angular et utilisez la commande :</p>
+                <pre><code class="language-bash" data-trim>
+ng add @angular/material
+                </code></pre>
+                <p>La librairie sera accessible dans le projet. Ensuite, si besoin, consultez la <a href="https://material.angular.io/components" target="_blank">documentation</a> pour connaître les composants disponibles et leur utilisation.</p>
+            </section>
+
+            <section>
+                <h4 id="ng-premier">Un premier contact</h4>
+                <p>La première étape consiste à créer l'application et afficher un seul contact:</p>
+                <ol>
+                    <li>Créez un projet Angular et modifiez-le pour qu’il affiche une page vide.</li>
+                    <li>Ajoutez Material à votre projet, et ajoutez une barre d'outils dans le composant racine, qui affiche le titre de l'application (cf. impression écran ci-dessus).</li>
+                    <li>Ajoutez une nouvelle interface TS nommée <code>ContactInfo</code> qui comprend les propriétés suivantes:</li>
+                    <ul>
+                        <li><code>name</code>: pour définir le nom du contact</li>
+                        <li><code>phone</code>: pour définir le numéro de téléphone</li>
+                        <li><code>group</code>: pour définir la catégorie (e.g. "famille", "amis", etc.)</li>
+                        <li><code>image</code>: pour spécifier le chemin vers l'image de profil</li>
+                    </ul>
+                    <li>Ajoutez un composant <code>Contact</code> qui contient une propriété de type <code>ContactInfo</code> et qui affiche ses informations dans un élément HTML dédié. Utilisez les composants <code>Card</code> de Material, comme montré dans l'impression écran ci-dessus. Les images sont à télécharger sur UniversiTICE et à placer dans le dossier <code>public</code> de votre projet.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h4 id="ng-liste">Liste de contacts</h4>
+                <p>La deuxième étape consiste à afficher une liste de contacts.</p>
+
+            <section>
+                <h4 id="ng-details">Détails d'un contact</h4>
+            </section>
+
+            <section>
+                <h4 id="ng-fonctionnalites">Ajout, suppression et recherche d'un contact</h4>
+            </section>
 
         </section>
 
