@@ -318,14 +318,38 @@ ng add @angular/material
 
             <section>
                 <h4 id="ng-liste">Liste de contacts</h4>
-                <p>La deuxième étape consiste à afficher une liste de contacts.</p>
-
-            <section>
-                <h4 id="ng-details">Détails d'un contact</h4>
+                <p>La deuxième étape consiste à modifier l’application pour qu’elle affiche la liste des contacts au lieu d’un seul contact:</p>
+                <ol>
+                    <li>Créez un service <code>PhoneBookService</code> contenant :</li>
+                    <ul>
+                        <li>une liste de contacts comme attribut privé</li>
+                        <li>un <em>getter</em> publique pour cette liste</li>
+                        <li>une méthode <code>getContact</code> qui permet de récupérer un contact de la liste à partir de son nom</li>
+                    </ul>
+                    <li>Ajoutez un composant <code>PhoneBook</code> qui utilise ce service pour afficher la liste des contacts. Il faudra pour cela modifier les composants <code>App</code> et <code>Contact</code>.</li>
+                </ol>
             </section>
 
             <section>
-                <h4 id="ng-fonctionnalites">Ajout, suppression et recherche d'un contact</h4>
+                <h4 id="ng-details">Détails d'un contact</h4>
+                <p>L’objectif est maintenant d’ajouter une fonctionnalité pour afficher les détails de chaque contact, comme nous l'avons fait dans le cours avec le projet <code>Warehouse</code>:</p>
+                <ol>
+                    <li>Ajoutez un composant <code>ContactDetails</code>.</li>
+                    <li>Modifiez le composant <code>Contact</code> pour ajouter un bouton à chaque contact permettant d'afficher ses détails.</li>
+                    <li>Modifiez le <em>template</em> du <code>ContactDetails</code> pour qu'il affiche les détails d'un contact dans des champs de formulaire éditables (cf. figure ci-dessous). Les valeurs de ces champs seront liées avec les données du composants, comme expliqué en cours.</li>
+                    <li>Ajoutez également à ce template un bouton de retour à la liste des contacts et un bouton de suppression du contact (inopérant pour le moment).</li>
+                    <li>Ajoutez la configuration du routage Angular pour rendre la navigation fonctionnelle entre la liste de contacts et les détails de chaque contact.</li>
+                </ol>
+                <a href="../img/phonebook-screen2.png" target="_blank"><img src="../img/phonebook-screen2.png" class="w-100 m-auto mt-2 mb-4"></a>
+            </section>
+
+            <section>
+                <h4 id="ng-fonctionnalites">Suppression et recherche d'un contact</h4>
+                <ol>
+                    <li>Modifiez votre projet pour que les contacts soient affichés par ordre alphabétique de leur nom et ce, quelque soit l’ordre dans lequel ils apparaissent dans le tableau TS.</li>
+                    <li>Modifiez le composant <code>PhoneBook</code> pour ajouter une fonction de recherche par nom. Pour cela, ajoutez un champ de recherche en haut de la liste pour filtrer les contacts par nom, comme pour le premier exercice "Gestion de contact".</li>
+                    <li>Ajoutez la fonctionnalité de suppression du contact pour les boutons de suppression de la liste des contacts ainsi que du composant <code>ContactDetails</code>.</li>
+                </ol>
             </section>
 
         </section>
