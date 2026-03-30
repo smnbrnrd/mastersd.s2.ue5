@@ -105,6 +105,18 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#kanban-collapse" aria-expanded="false">
+                        Projet Kanban
+                    </button>
+                    <div class="collapse" id="kanban-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#kanban" class="d-inline-flex align-items-center rounded">Projet Kanban</a></li>
+                        </ul>
+                    </div>
+                </li>
+
             </ul>
         </nav>
     </aside>
@@ -352,6 +364,15 @@ ng add @angular/material
                 </ol>
             </section>
 
+        </section>
+
+        <section>
+            <h3 id="kanban">Projet Kanban</h3>
+            <p>Il s'agit de réaliser une application de gestion de tâches en Angular, à la manière d'un <a href="https://fr.wikipedia.org/wiki/Tableau_kanban">tableau de Kanban</a>. Les figures ci-dessous, montrent des exemples d'interfaces que l'on pourrait obtenir. Vous n'êtes pas tenu de recréer exactement ces interfaces, vous devez proposer vos propres interfaces.</p>
+            <a href="../img/kanban-screen1.png" target="_blank"><img src="../img/kanban-screen1.png" class="w-100 m-auto mt-2 mb-4"></a>
+            <a href="../img/kanban-screen2.png" target="_blank"><img src="../img/kanban-screen2.png" class="w-100 m-auto mt-2 mb-4"></a>
+            <p>L'application doit permettre de créer, modifier et supprimer des tâches. Une tâche est caractérisée par un titre, une description et un statut. Le statut indique si la tâche est en cours, terminée ou en attente. Après sa création, il doit être possible de modifier une tâche, notamment pour changer son statut.</p>
+            <p>Vous êtes encouragé à être créatif dans la conception de votre interface utilisateur et à proposer des fonctionnalités supplémentaires. Si vous n'êtes pas familier avec les tableau de Kanban, vous pouvez vous inspirer des applications existantes, comme par exemple <a href="https://www.atlassian.com/software/jira" target="_blank">Jira</a>.</p>
         </section>
 
     </main>
